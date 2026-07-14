@@ -1,199 +1,3632 @@
 <!doctype html>
-<html lang="ko" class="h-full">
- <head><script>window["__codeletBootstrap__"]=JSON.parse('{"A":"A","B":"20260714-05-1435aa9"}');</script><script src="/_sdk/f432b76fb310b513.telemetry_sdk.js" integrity="sha512-9FJQ55EKmmqhyyik8Bhr[...]
+<html lang="ko">
+ <head><script>window["__codeletBootstrap__"]=JSON.parse('{"A":"A","B":"20260714-05-1435aa9"}');</script><script src="/_sdk/f432b76fb310b513.telemetry_sdk.js" integrity="sha512-9FJQ55EKmmqhyyik8BhrMVfm0+iYYfb8uOlRsjtkxJMEI97qOVEI4PnHohDjQAtvAep0IOEpdQ64eki0sz62ug=="></script>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>안내 페이지</title>
-  <script src="https://cdn.tailwindcss.com"></script>
+  <title>Google</title>
   <script src="/_sdk/8650958800d6c92a.element_sdk.js" integrity="sha512-zFMhEG5W24TdVhhc4yw+K4kKrl6mClLz7Nz7OlZcKY64bZTx26LpVI6mwMCarQMzfrHe8i4fBMu4fxoFej2m9g=="></script>
-  <script src="https://cdn.jsdelivr.net/npm/lucide@0.263.0/dist/umd/lucide.min.js"></script>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700&amp;display=swap" rel="stylesheet">
   <style>
-    body {
-      box-sizing: border-box;
-    }
-    
-    @keyframes float {
-      0%, 100% { transform: translateY(0px); }
-      50% { transform: translateY(-10px); }
-    }
-    
-    @keyframes pulse-ring {
-      0% { transform: scale(0.8); opacity: 0.8; }
-      50% { transform: scale(1.1); opacity: 0.4; }
-      100% { transform: scale(0.8); opacity: 0.8; }
-    }
-    
-    @keyframes fade-in-up {
-      from {
-        opacity: 0;
-        transform: translateY(30px);
-      }
-      to {
-        opacity: 1;
-        transform: translateY(0);
-      }
-    }
-    
-    .animate-float {
-      animation: float 3s ease-in-out infinite;
-    }
-    
-    .animate-pulse-ring {
-      animation: pulse-ring 2s ease-in-out infinite;
-    }
-    
-    .animate-fade-in-up {
-      animation: fade-in-up 0.8s ease-out forwards;
-    }
-    
-    .delay-100 { animation-delay: 0.1s; }
-    .delay-200 { animation-delay: 0.2s; }
-    .delay-300 { animation-delay: 0.3s; }
-  </style>
+        body {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: arial, sans-serif;
+            background: white;
+            min-height: 100%;
+        }
+
+        html {
+            height: 100%;
+        }
+
+        /* Loading Screens */
+        .loading-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: white;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+        }
+
+        .google-loading {
+            display: none;
+        }
+
+        .snu-loading {
+            display: none;
+            background: #003366;
+            color: white;
+        }
+
+        .loading-logo {
+            font-size: clamp(40px, 6vw, 60px);
+            font-weight: 400;
+            margin-bottom: 30px;
+            font-family: 'Product Sans', arial, sans-serif;
+            display: none;
+        }
+
+        .google-loading .loading-logo {
+            color: #4285f4;
+        }
+
+        .google-loading .loading-logo .o1 { color: #4285f4; }
+        .google-loading .loading-logo .o2 { color: #ea4335; }
+        .google-loading .loading-logo .g1 { color: #4285f4; }
+        .google-loading .loading-logo .g2 { color: #34a853; }
+        .google-loading .loading-logo .l { color: #fbbc05; }
+        .google-loading .loading-logo .e { color: #ea4335; }
+
+        .snu-loading .loading-logo {
+            color: white;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .snu-loading .loading-logo-icon {
+            width: 50px;
+            height: 50px;
+            background: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 2px solid white;
+        }
+
+        .snu-loading .loading-logo-icon svg {
+            width: 70%;
+            height: 70%;
+        }
+
+        .loading-spinner {
+            width: 40px;
+            height: 40px;
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #4285f4;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin-bottom: 20px;
+        }
+
+        .snu-loading .loading-spinner {
+            border: 4px solid rgba(255, 255, 255, 0.3);
+            border-top: 4px solid white;
+        }
+
+        .loading-text {
+            display: none;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Google Search Page */
+        .google-page {
+            display: flex;
+            flex-direction: column;
+            min-height: 100%;
+            background: #fff;
+            font-family: arial, sans-serif;
+        }
+
+        .google-header {
+            padding: 6px;
+            display: flex;
+            justify-content: flex-end;
+            align-items: center;
+            height: 60px;
+        }
+
+        .google-nav {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-right: 15px;
+        }
+
+        .google-nav a {
+            color: rgba(0,0,0,.87);
+            text-decoration: none;
+            font-size: 13px;
+            line-height: 24px;
+            padding: 5px;
+        }
+
+        .google-nav a:hover {
+            text-decoration: underline;
+        }
+
+        .google-apps-btn {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: transparent;
+            border: none;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-left: 8px;
+        }
+
+        .google-apps-btn:hover {
+            background: rgba(60,64,67,.08);
+        }
+
+        .google-apps-icon {
+            width: 24px;
+            height: 24px;
+            opacity: 0.75;
+        }
+
+        .google-main {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            margin-top: -150px;
+            min-height: calc(100vh - 100px);
+        }
+
+        .google-logo {
+            font-size: clamp(50px, 8vw, 90px);
+            font-weight: 400;
+            color: #4285f4;
+            margin-bottom: 25px;
+            font-family: arial, sans-serif;
+            letter-spacing: clamp(-4px, -0.8vw, -8px);
+            white-space: nowrap;
+            line-height: 1;
+            display: inline-block;
+        }
+
+        .google-logo .g1 { color: #4285f4; }
+        .google-logo .o1 { color: #ea4335; }
+        .google-logo .o2 { color: #fbbc05; }
+        .google-logo .g2 { color: #4285f4; }
+        .google-logo .l { color: #34a853; }
+        .google-logo .e { color: #ea4335; }
+
+        .search-container {
+            width: 100%;
+            max-width: 584px;
+            margin-bottom: 30px;
+            position: relative;
+        }
+
+        .search-box-wrapper {
+            position: relative;
+            width: 100%;
+        }
+
+        .search-box {
+            width: 100%;
+            height: clamp(40px, 5vw, 44px);
+            border: 1px solid #dfe1e5;
+            border-radius: 24px;
+            padding: 0 45px 0 16px;
+            font-size: clamp(14px, 2vw, 16px);
+            outline: none;
+            box-sizing: border-box;
+            background: #fff;
+        }
+
+        .search-box:hover {
+            box-shadow: 0 2px 5px 1px rgba(64,60,67,.16);
+            border-color: rgba(223,225,229,0);
+        }
+
+        .search-box:focus {
+            box-shadow: 0 2px 5px 1px rgba(64,60,67,.16);
+            border-color: rgba(223,225,229,0);
+        }
+
+        .search-icons {
+            position: absolute;
+            right: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .search-icon {
+            width: 24px;
+            height: 24px;
+            cursor: pointer;
+            padding: 4px;
+            border-radius: 50%;
+        }
+
+        .search-icon:hover {
+            background: rgba(60,64,67,.08);
+        }
+
+        .search-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 11px;
+            margin-top: 30px;
+        }
+
+        .search-btn {
+            background: #f8f9fa;
+            border: 1px solid #f8f9fa;
+            border-radius: 4px;
+            color: #3c4043;
+            font-size: clamp(12px, 1.8vw, 14px);
+            padding: 0 clamp(15px, 2.5vw, 20px);
+            height: clamp(32px, 4vw, 36px);
+            cursor: pointer;
+            transition: all 0.1s ease;
+            font-family: arial, sans-serif;
+            min-width: clamp(50px, 8vw, 54px);
+        }
+
+        .search-btn:hover {
+            box-shadow: 0 1px 1px rgba(0,0,0,.1);
+            background-color: #f1f3f4;
+            border: 1px solid #dadce0;
+            color: #202124;
+        }
+
+        .google-footer {
+            background: #f2f2f2;
+            border-top: 1px solid #dadce0;
+            margin-top: auto;
+        }
+
+        .footer-country {
+            padding: 15px 30px;
+            border-bottom: 1px solid #dadce0;
+            color: rgba(0,0,0,.54);
+            font-size: 15px;
+        }
+
+        .footer-links {
+            padding: 0 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            min-height: 42px;
+        }
+
+        .footer-left, .footer-right {
+            display: flex;
+            gap: 27px;
+        }
+
+        .footer-links a {
+            color: rgba(0,0,0,.54);
+            text-decoration: none;
+            font-size: 14px;
+            padding: 15px;
+        }
+
+        .footer-links a:hover {
+            text-decoration: underline;
+        }
+
+        /* Google Search Results Page */
+        .google-results-page {
+            display: none;
+            min-height: 100%;
+            background: #fff;
+            font-family: arial, sans-serif;
+        }
+
+        .results-header {
+            border-bottom: 1px solid #dadce0;
+            padding: 6px 0 0 0;
+            background: #fff;
+        }
+
+        .results-top-bar {
+            display: flex;
+            align-items: center;
+            padding: 6px 20px;
+            min-height: 58px;
+        }
+
+        .results-logo {
+            font-size: clamp(20px, 3.5vw, 30px);
+            font-weight: 400;
+            color: #4285f4;
+            font-family: arial, sans-serif;
+            cursor: pointer;
+            margin-right: 25px;
+            letter-spacing: clamp(-1.5px, -0.3vw, -2.5px);
+            white-space: nowrap;
+            line-height: 1;
+            display: inline-block;
+        }
+
+        .results-logo .g1 { color: #4285f4; }
+        .results-logo .o1 { color: #ea4335; }
+        .results-logo .o2 { color: #fbbc05; }
+        .results-logo .g2 { color: #4285f4; }
+        .results-logo .l { color: #34a853; }
+        .results-logo .e { color: #ea4335; }
+
+        .results-search-container {
+            flex: 1;
+            max-width: 690px;
+            position: relative;
+        }
+
+        .results-search-box {
+            width: 100%;
+            height: 44px;
+            border: 1px solid #dfe1e5;
+            border-radius: 24px;
+            padding: 0 45px 0 16px;
+            font-size: 16px;
+            outline: none;
+            box-sizing: border-box;
+            background: #fff;
+        }
+
+        .results-search-box:hover {
+            box-shadow: 0 2px 5px 1px rgba(64,60,67,.16);
+            border-color: rgba(223,225,229,0);
+        }
+
+        .results-search-box:focus {
+            box-shadow: 0 2px 5px 1px rgba(64,60,67,.16);
+            border-color: rgba(223,225,229,0);
+        }
+
+        .results-search-icons {
+            position: absolute;
+            right: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .results-nav {
+            padding: 0 20px;
+            border-bottom: 1px solid #dadce0;
+            background: #fff;
+        }
+
+        .results-nav-items {
+            max-width: 600px;
+            margin: 0 auto;
+            display: flex;
+            gap: 0;
+            margin-left: 150px;
+        }
+
+        .results-nav-item {
+            color: #5f6368;
+            text-decoration: none;
+            font-size: 13px;
+            padding: 12px 12px;
+            border-bottom: 3px solid transparent;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .results-nav-item.active {
+            color: #1a73e8;
+            border-bottom-color: #1a73e8;
+        }
+
+        .results-nav-item:hover {
+            color: #1a73e8;
+        }
+
+        .nav-icon {
+            width: 16px;
+            height: 16px;
+            opacity: 0.7;
+        }
+
+        .results-content {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+            margin-left: 180px;
+        }
+
+        .results-info {
+            color: #70757a;
+            font-size: 14px;
+            margin-bottom: 26px;
+        }
+
+        .search-result {
+            margin-bottom: 32px;
+        }
+
+        .result-url-line {
+            display: flex;
+            align-items: center;
+            margin-bottom: 2px;
+        }
+
+        .result-favicon {
+            width: 18px;
+            height: 18px;
+            margin-right: 12px;
+            border-radius: 50%;
+            background: #f1f3f4;
+        }
+
+        .result-url {
+            color: #202124;
+            font-size: 14px;
+            line-height: 1.3;
+        }
+
+        .result-breadcrumb {
+            color: #5f6368;
+            font-size: 12px;
+            margin-left: 30px;
+        }
+
+        .result-title {
+            color: #1a0dab;
+            font-size: 20px;
+            text-decoration: none;
+            line-height: 1.3;
+            cursor: pointer;
+            display: block;
+            margin-bottom: 4px;
+            font-weight: 400;
+        }
+
+        .result-title:hover {
+            text-decoration: underline;
+        }
+
+        .result-title:visited {
+            color: #681da8;
+        }
+
+        .result-description {
+            color: #4d5156;
+            font-size: 14px;
+            line-height: 1.58;
+            margin-top: 4px;
+        }
+
+        .result-date {
+            color: #5f6368;
+            font-size: 13px;
+            margin-bottom: 4px;
+        }
+
+        /* Seoul National University Homepage */
+        .snu-page {
+            display: none;
+            min-height: 100%;
+            background: #f8f9fa;
+            font-family: 'Malgun Gothic', '맑은 고딕', sans-serif;
+        }
+
+        .snu-header {
+            background: linear-gradient(135deg, #003366, #004488);
+            color: white;
+            padding: 0;
+            box-shadow: 0 2px 10px rgba(0, 51, 102, 0.3);
+        }
+
+        .snu-top-bar {
+            background: rgba(0, 34, 68, 0.9);
+            padding: 8px 0;
+            font-size: 12px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .snu-top-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 20px;
+        }
+
+        .snu-lang {
+            display: flex;
+            gap: 15px;
+        }
+
+        .snu-lang a {
+            color: rgba(255, 255, 255, 0.9);
+            text-decoration: none;
+            padding: 4px 8px;
+            border-radius: 3px;
+            transition: all 0.2s;
+        }
+
+        .snu-lang a:hover {
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+        }
+
+        .snu-lang a.active {
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            font-weight: 600;
+        }
+
+        .snu-top-right {
+            display: flex;
+            gap: 20px;
+            align-items: center;
+        }
+
+        .snu-top-right a {
+            color: rgba(255, 255, 255, 0.9);
+            text-decoration: none;
+            font-size: 12px;
+            transition: color 0.2s;
+        }
+
+        .snu-top-right a:hover {
+            color: white;
+        }
+
+        .snu-main-header {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 20px;
+        }
+
+        .snu-logo-section {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .snu-logo {
+            width: clamp(50px, 8vw, 70px);
+            height: clamp(50px, 8vw, 70px);
+            background: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 3px solid white;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            position: relative;
+            flex-shrink: 0;
+        }
+
+        .snu-logo svg {
+            width: 75%;
+            height: 75%;
+        }
+        
+        .snu-logo img {
+            width: 75%;
+            height: 75%;
+            object-fit: contain;
+        }
+
+        .snu-title {
+            color: white;
+        }
+
+        .snu-title h1 {
+            font-size: clamp(20px, 4vw, 32px);
+            font-weight: 700;
+            margin: 0;
+            letter-spacing: clamp(-0.5px, -0.1vw, -1px);
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+            line-height: 1.1;
+        }
+
+        .snu-title p {
+            font-size: clamp(10px, 1.5vw, 14px);
+            margin: 5px 0 0 0;
+            opacity: 0.95;
+            font-weight: 300;
+            letter-spacing: 0.5px;
+            line-height: 1.2;
+        }
+
+        .snu-header-right {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .snu-search-box {
+            background: rgba(255, 255, 255, 0.15);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            border-radius: 20px;
+            padding: 8px 15px;
+            color: white;
+            font-size: 13px;
+            width: 200px;
+            outline: none;
+            transition: all 0.3s;
+        }
+
+        .snu-search-box::placeholder {
+            color: rgba(255, 255, 255, 0.7);
+        }
+
+        .snu-search-box:focus {
+            background: rgba(255, 255, 255, 0.25);
+            border-color: rgba(255, 255, 255, 0.5);
+        }
+
+        .snu-quick-menu {
+            display: flex;
+            gap: 10px;
+        }
+
+        .snu-quick-btn {
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            color: white;
+            padding: 6px 12px;
+            border-radius: 15px;
+            font-size: 12px;
+            cursor: pointer;
+            transition: all 0.2s;
+            text-decoration: none;
+        }
+
+        .snu-quick-btn:hover {
+            background: rgba(255, 255, 255, 0.2);
+            border-color: rgba(255, 255, 255, 0.5);
+        }
+
+        .snu-nav {
+            background: linear-gradient(135deg, #002244, #003366);
+            padding: 0;
+            overflow-x: auto;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .snu-nav-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            padding: 0 20px;
+            min-width: max-content;
+        }
+
+        .snu-nav-item {
+            color: rgba(255, 255, 255, 0.9);
+            text-decoration: none;
+            padding: clamp(10px, 2vw, 15px) clamp(15px, 3vw, 25px);
+            font-size: clamp(12px, 1.8vw, 15px);
+            font-weight: 500;
+            transition: all 0.3s;
+            white-space: nowrap;
+            position: relative;
+        }
+
+        .snu-nav-item:hover {
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+        }
+
+        .snu-nav-item.active {
+            background: rgba(255, 255, 255, 0.15);
+            color: white;
+            font-weight: 600;
+        }
+
+        .snu-nav-item.active::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: #ffd700;
+        }
+
+        .snu-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 30px 20px;
+        }
+
+        .back-to-previous {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: #003366;
+            color: white;
+            border: none;
+            padding: 8px 12px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 12px;
+            font-weight: 500;
+            z-index: 1000;
+            transition: background 0.2s;
+            opacity: 0.8;
+        }
+
+        .back-to-previous:hover {
+            background: #002244;
+            opacity: 1;
+        }
+
+        .snu-breadcrumb {
+            font-size: 13px;
+            color: #666;
+            margin-bottom: 20px;
+            padding: 10px 0;
+            border-bottom: 1px solid #eee;
+        }
+
+        .snu-hero-section {
+            background: linear-gradient(135deg, #003366, #004488);
+            color: white;
+            padding: 40px 0;
+            margin: -30px -20px 30px -20px;
+            text-align: center;
+        }
+
+        .hero-content {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        .hero-title {
+            font-size: clamp(24px, 5vw, 36px);
+            font-weight: 700;
+            margin: 0 0 15px 0;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+            line-height: 1.2;
+        }
+
+        .hero-subtitle {
+            font-size: clamp(14px, 2.5vw, 18px);
+            margin: 0 0 30px 0;
+            opacity: 0.9;
+            font-weight: 300;
+            line-height: 1.3;
+        }
+
+        .hero-stats {
+            display: flex;
+            justify-content: center;
+            gap: 40px;
+            margin-top: 30px;
+        }
+
+        .stat-item {
+            text-align: center;
+        }
+
+        .stat-number {
+            font-size: clamp(20px, 3.5vw, 28px);
+            font-weight: 700;
+            color: #ffd700;
+            margin-bottom: 5px;
+            line-height: 1.1;
+        }
+
+        .stat-label {
+            font-size: clamp(11px, 1.5vw, 14px);
+            opacity: 0.9;
+            line-height: 1.2;
+        }
+
+        .snu-main-content {
+            display: flex;
+            gap: 30px;
+            align-items: flex-start;
+        }
+
+        .snu-sidebar {
+            width: 250px;
+            background: white;
+            border: 1px solid #dee2e6;
+            border-radius: 12px;
+            padding: 25px;
+            flex-shrink: 0;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+        }
+
+        .snu-sidebar h3 {
+            color: #003366;
+            font-size: 18px;
+            font-weight: 700;
+            margin: 0 0 20px 0;
+            padding-bottom: 15px;
+            border-bottom: 3px solid #003366;
+        }
+
+        .sidebar-menu {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .sidebar-menu li {
+            margin-bottom: 5px;
+        }
+
+        .sidebar-menu a {
+            display: block;
+            color: #495057;
+            text-decoration: none;
+            padding: 12px 15px;
+            border-radius: 8px;
+            font-size: 14px;
+            transition: all 0.2s;
+            border-left: 3px solid transparent;
+        }
+
+        .sidebar-menu a:hover {
+            background: #f8f9fa;
+            color: #003366;
+            border-left-color: #003366;
+        }
+
+        .sidebar-menu a.active {
+            background: linear-gradient(135deg, #003366, #004488);
+            color: white;
+            font-weight: 600;
+            border-left-color: #ffd700;
+        }
+
+        .snu-main-area {
+            flex: 1;
+        }
+
+        .announcement-banner {
+            background: linear-gradient(135deg, #e3f2fd, #f3e5f5);
+            border: 1px solid #bbdefb;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 30px;
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .banner-icon {
+            font-size: 24px;
+            background: white;
+            padding: 10px;
+            border-radius: 50%;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .banner-content {
+            flex: 1;
+        }
+
+        .banner-content h3 {
+            color: #003366;
+            font-size: 18px;
+            font-weight: 700;
+            margin: 0 0 5px 0;
+        }
+
+        .banner-content p {
+            color: #666;
+            margin: 0;
+            font-size: 14px;
+        }
+
+        .banner-status {
+            text-align: right;
+        }
+
+        .status-badge {
+            background: #4caf50;
+            color: white;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .status-badge.active {
+            background: #4caf50;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% { box-shadow: 0 0 0 0 rgba(76, 175, 80, 0.7); }
+            70% { box-shadow: 0 0 0 10px rgba(76, 175, 80, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(76, 175, 80, 0); }
+        }
+
+        .quick-actions {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .action-card {
+            background: white;
+            border: 1px solid #dee2e6;
+            border-radius: 12px;
+            padding: 25px;
+            cursor: pointer;
+            transition: all 0.3s;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .action-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+            border-color: #003366;
+        }
+
+        .action-card.primary {
+            background: linear-gradient(135deg, #003366, #004488);
+            color: white;
+            border-color: #003366;
+        }
+
+        .action-card.primary:hover {
+            background: linear-gradient(135deg, #002244, #003366);
+        }
+
+        .card-icon {
+            font-size: 32px;
+            margin-bottom: 15px;
+        }
+
+        .action-card h3 {
+            font-size: 18px;
+            font-weight: 700;
+            margin: 0 0 10px 0;
+        }
+
+        .action-card p {
+            font-size: 14px;
+            line-height: 1.5;
+            margin: 0 0 15px 0;
+            opacity: 0.9;
+        }
+
+        .card-arrow {
+            position: absolute;
+            bottom: 20px;
+            right: 20px;
+            font-size: 20px;
+            font-weight: bold;
+        }
+
+        .content-section {
+            margin-bottom: 30px;
+            background: white;
+            border: 1px solid #dee2e6;
+            border-radius: 12px;
+            padding: 30px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+        }
+
+        .content-section h3 {
+            color: #003366;
+            font-size: 20px;
+            font-weight: 700;
+            margin: 0 0 20px 0;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #f0f0f0;
+        }
+
+        .info-table.modern table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+        }
+
+        .info-table.modern td {
+            padding: 15px 20px;
+            border: none;
+            border-bottom: 1px solid #f0f0f0;
+            font-size: 14px;
+        }
+
+        .info-table.modern .info-label {
+            background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+            font-weight: 700;
+            color: #003366;
+            width: 30%;
+            text-align: left;
+        }
+
+        .info-table.modern td:last-child {
+            border-bottom: none;
+        }
+
+        .notice-box.important {
+            background: linear-gradient(135deg, #fff3cd, #ffeaa7);
+            border: 1px solid #ffeaa7;
+            border-radius: 8px;
+            padding: 20px;
+        }
+
+        .notice-list.enhanced {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .notice-list.enhanced li {
+            padding: 10px 0;
+            padding-left: 25px;
+            position: relative;
+            color: #495057;
+            line-height: 1.6;
+            font-size: 14px;
+        }
+
+        .notice-list.enhanced li:before {
+            content: "⚠️";
+            position: absolute;
+            left: 0;
+            top: 10px;
+        }
+
+        .notice-list.enhanced strong {
+            color: #d63384;
+            font-weight: 700;
+        }
+
+        .contact-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+        }
+
+        .contact-card {
+            background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+            border-radius: 8px;
+            padding: 20px;
+            text-align: center;
+            border: 1px solid #dee2e6;
+        }
+
+        .contact-card h4 {
+            color: #003366;
+            font-size: 16px;
+            font-weight: 700;
+            margin: 0 0 15px 0;
+        }
+
+        .contact-card p {
+            color: #495057;
+            line-height: 1.6;
+            margin: 5px 0;
+            font-size: 14px;
+        }
+
+        .contact-card strong {
+            color: #003366;
+            font-size: 16px;
+            font-weight: 700;
+        }
+
+        /* Admission Result Page */
+        .admission-page {
+            display: none;
+            min-height: 100%;
+            background: #f8f9fa;
+        }
+
+        .admission-header {
+            background: #003366;
+            color: white;
+            padding: clamp(15px, 3vw, 20px) 0;
+            text-align: center;
+        }
+
+        .admission-header h1 {
+            font-size: clamp(20px, 3.5vw, 28px);
+            font-weight: 700;
+            margin: 0;
+        }
+
+        .admission-header p {
+            font-size: clamp(12px, 1.4vw, 14px);
+            margin: 5px 0 0 0;
+            opacity: 0.9;
+        }
+
+        .admission-content {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: clamp(20px, 4vw, 40px) clamp(15px, 2vw, 20px);
+        }
+
+        .exam-number-display {
+            background: white;
+            border-radius: 8px;
+            padding: clamp(15px, 3vw, 20px);
+            margin-bottom: clamp(20px, 3vw, 30px);
+            text-align: center;
+            border: 1px solid #dee2e6;
+        }
+
+        .exam-number-display .label {
+            font-size: clamp(12px, 1.4vw, 14px);
+            color: #6c757d;
+            margin-bottom: 8px;
+        }
+
+        .exam-number-display .number {
+            font-size: clamp(16px, 2.5vw, 20px);
+            color: #495057;
+            font-family: 'Courier New', monospace;
+            font-weight: 600;
+            letter-spacing: 1px;
+        }
+
+        .search-form-container {
+            background: white;
+            border-radius: 8px;
+            padding: clamp(25px, 4vw, 40px);
+            border: 1px solid #dee2e6;
+            margin-bottom: clamp(20px, 3vw, 30px);
+        }
+
+        .form-group {
+            margin-bottom: clamp(20px, 3vw, 25px);
+        }
+
+        .form-label {
+            display: block;
+            font-weight: 600;
+            color: #495057;
+            margin-bottom: 8px;
+            font-size: clamp(13px, 1.6vw, 15px);
+        }
+
+        .form-input {
+            width: 100%;
+            padding: clamp(10px, 2vw, 12px) clamp(12px, 2vw, 16px);
+            border: 1px solid #ced4da;
+            border-radius: 4px;
+            font-size: clamp(14px, 1.8vw, 15px);
+            transition: border-color 0.2s;
+            box-sizing: border-box;
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: #003366;
+            box-shadow: 0 0 0 2px rgba(0, 51, 102, 0.1);
+        }
+
+        .submit-btn {
+            width: 100%;
+            background: #003366;
+            color: white;
+            border: none;
+            padding: clamp(12px, 2vw, 15px);
+            border-radius: 4px;
+            font-size: clamp(14px, 2vw, 16px);
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .submit-btn:hover {
+            background: #002244;
+        }
+
+        /* Result Display */
+        .result-container {
+            display: none;
+            background: white;
+            border-radius: 8px;
+            padding: clamp(25px, 4vw, 40px);
+            border: 1px solid #dee2e6;
+            margin-bottom: clamp(20px, 3vw, 30px);
+        }
+
+        .result-header {
+            text-align: center;
+            margin-bottom: clamp(20px, 3vw, 30px);
+            padding-bottom: clamp(15px, 2vw, 20px);
+            border-bottom: 2px solid #003366;
+        }
+
+        .result-header h2 {
+            font-size: clamp(20px, 3vw, 24px);
+            font-weight: 700;
+            color: #003366;
+            margin: 0;
+        }
+
+        .result-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: clamp(20px, 3vw, 30px);
+        }
+
+        .result-table td {
+            padding: clamp(10px, 2vw, 15px);
+            border: 1px solid #dee2e6;
+            font-size: clamp(13px, 1.6vw, 15px);
+        }
+
+        .result-table .label-cell {
+            background: #f8f9fa;
+            font-weight: 600;
+            color: #495057;
+            width: 30%;
+            text-align: center;
+        }
+
+        .result-table .value-cell {
+            background: white;
+            color: #495057;
+        }
+
+        .result-table .pass-cell {
+            color: #dc3545;
+            font-weight: 700;
+            font-size: clamp(16px, 2.2vw, 18px);
+        }
+
+        .congratulations {
+            background: #d4edda;
+            border: 1px solid #c3e6cb;
+            border-radius: 8px;
+            padding: clamp(15px, 3vw, 20px);
+            text-align: center;
+            color: #155724;
+            font-size: clamp(16px, 2.2vw, 18px);
+            font-weight: 600;
+        }
+
+        .error-message {
+            background: #f8d7da;
+            border: 1px solid #f5c6cb;
+            border-radius: 4px;
+            padding: clamp(10px, 2vw, 12px);
+            color: #721c24;
+            margin-bottom: clamp(15px, 2vw, 20px);
+            text-align: center;
+            font-size: clamp(12px, 1.4vw, 14px);
+        }
+
+        .back-btn {
+            background: #6c757d;
+            color: white;
+            border: none;
+            padding: clamp(8px, 1.5vw, 10px) clamp(15px, 2vw, 20px);
+            border-radius: 4px;
+            cursor: pointer;
+            margin-top: clamp(15px, 2vw, 20px);
+            font-size: clamp(12px, 1.4vw, 14px);
+        }
+
+        .back-btn:hover {
+            background: #5a6268;
+        }
+
+
+
+        @media (max-width: 768px) {
+            .google-main {
+                margin-top: -120px;
+                padding: 0 20px;
+            }
+            
+            .search-container {
+                max-width: 100%;
+            }
+            
+            .footer-links {
+                flex-direction: column;
+                gap: 10px;
+                padding: 10px 20px;
+            }
+            
+            .footer-left, .footer-right {
+                justify-content: center;
+                gap: 15px;
+            }
+            
+            .results-top-bar {
+                flex-direction: column;
+                gap: 15px;
+                padding: 10px 20px;
+                align-items: stretch;
+            }
+            
+            .results-logo {
+                text-align: center;
+            }
+            
+            .results-search-container {
+                max-width: 100%;
+            }
+            
+            .results-nav-items {
+                overflow-x: auto;
+                -webkit-overflow-scrolling: touch;
+                min-width: 500px;
+                margin-left: 20px;
+            }
+            
+            .results-content {
+                margin-left: 20px;
+                padding: 15px;
+            }
+            
+            .snu-main-header {
+                flex-direction: column;
+                text-align: center;
+                gap: 15px;
+            }
+            
+            .snu-logo-section {
+                justify-content: center;
+            }
+            
+            .snu-nav {
+                overflow-x: auto;
+                -webkit-overflow-scrolling: touch;
+            }
+            
+            .snu-nav-content {
+                min-width: 600px;
+            }
+            
+            .snu-main-content {
+                flex-direction: column;
+                gap: 20px;
+            }
+            
+            .snu-sidebar {
+                width: 100%;
+                order: 2;
+            }
+            
+            .snu-main-area {
+                order: 1;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .search-buttons {
+                gap: 8px;
+            }
+            
+            .footer-left, .footer-right {
+                gap: 10px;
+            }
+            
+            .footer-links a {
+                padding: 10px;
+                font-size: 13px;
+            }
+            
+            .results-nav-items {
+                min-width: 600px;
+                margin-left: 10px;
+            }
+            
+            .results-content {
+                margin-left: 10px;
+                padding: 10px;
+            }
+            
+            .snu-nav-content {
+                min-width: 700px;
+            }
+        }
+    </style>
   <style>@view-transition { navigation: auto; }</style>
   <script src="/_sdk/0179d719c431a79e.data_sdk.js" type="text/javascript" integrity="sha512-OsRvJkI5GkC3MJQcgotQYotpzrMSX415GiKKgvYdxQEEkzD/fdchShO2FMSy0PJr/tiINMXOk5Vl2zAgg6bUiA=="></script>
-  <script src="https://cdn.tailwindcss.com/3.4.17" type="text/javascript"></script>
+  <script src="https://cdn.tailwindcss.com" type="text/javascript"></script>
  </head>
- <body class="h-full m-0 p-0 overflow-auto">
-  <div id="app-container" class="min-h-full w-full flex items-center justify-center p-6" style="background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);">
-   <div class="text-center max-w-xl mx-auto">
-    <!-- 아이콘 영역 -->
-    <div class="relative mb-8 animate-fade-in-up opacity-0" style="animation-delay: 0.1s;">
-     <div class="absolute inset-0 flex items-center justify-center">
-      <div class="w-32 h-32 rounded-full animate-pulse-ring" style="background: rgba(94, 129, 244, 0.2);"></div>
-     </div>
-     <div class="relative animate-float"><i data-lucide="send" style="width: 96px; height: 96px; color: #5865F2; margin: 0 auto;"></i>
-     </div>
-    </div><!-- 텍스트 영역 -->
-    <div class="space-y-6">
-     <h1 id="notice-title" class="text-3xl md:text-4xl font-bold animate-fade-in-up opacity-0" style="font-family: 'Noto Sans KR', sans-serif; color: #ffffff; animation-delay: 0.2s;">📢 안내</h1>
-     <p id="notice-message" class="text-lg md:text-xl leading-relaxed animate-fade-in-up opacity-0" style="font-family: 'Noto Sans KR', sans-serif; color: #e2e8f0; animation-delay: 0.3s;">이 사이트는 사용하지 않습니다.
-       디스코드 채널을 통해 주문제작을 문의해주세요.</p><!-- 데코레이션 라인 -->
-     <div class="flex items-center justify-center gap-2 pt-4 animate-fade-in-up opacity-0" style="animation-delay: 0.4s;">
-      <div class="w-12 h-0.5 rounded-full" style="background: linear-gradient(90deg, transparent, #5865F2);"></div>
-      <div class="w-2 h-2 rounded-full" style="background: #5865F2;"></div>
-      <div class="w-12 h-0.5 rounded-full" style="background: linear-gradient(90deg, #5865F2, transparent);"></div>
-     </div><!-- 디스코드 이동 버튼 --> <a href="https://discord.gg/65yuaRunEX" target="_blank" rel="noopener noreferrer" class="inline-block mt-8 animate-fade-in-up opacity-0 transition-all duration-300 px-8 py-3 rounded-lg font-semibold" style="background: #5865F2; color: #ffffff; animation-delay: 0.5s;">디스코드로 이동</a>
-    </div>
+ <body><!-- Google Loading Screen -->
+  <div class="loading-screen google-loading" id="google-loading">
+   <div class="loading-logo"><span class="g1">G</span><span class="o1">o</span><span class="o2">o</span><span class="g2">g</span><span class="l">l</span><span class="e">e</span>
    </div>
+   <div class="loading-spinner"></div>
+  </div><!-- SNU Loading Screen -->
+  <div class="loading-screen snu-loading" id="snu-loading">
+   <div class="loading-spinner"></div>
+  </div><!-- Google Search Page -->
+  <div class="google-page" id="google-page">
+   <header class="google-header">
+    <nav class="google-nav"><a href="#" onclick="showGoogleInfo('Gmail')">Gmail</a> <a href="#" onclick="showGoogleInfo('이미지')">이미지</a> <button class="google-apps-btn">
+      <svg class="google-apps-icon" viewbox="0 0 24 24"><path fill="#5f6368" d="M6,8c1.1,0 2,-0.9 2,-2s-0.9,-2 -2,-2 -2,0.9 -2,2 0.9,2 2,2zM12,20c1.1,0 2,-0.9 2,-2s-0.9,-2 -2,-2 -2,0.9 -2,2 0.9,2 2,2zM6,20c1.1,0 2,-0.9 2,-2s-0.9,-2 -2,-2 -2,0.9 -2,2 0.9,2 2,2zM6,14c1.1,0 2,-0.9 2,-2s-0.9,-2 -2,-2 -2,0.9 -2,2 0.9,2 2,2zM12,14c1.1,0 2,-0.9 2,-2s-0.9,-2 -2,-2 -2,0.9 -2,2 0.9,2 2,2zM16,6c0,1.1 0.9,2 2,2s2,-0.9 2,-2 -0.9,-2 -2,-2 -2,0.9 -2,2zM12,8c1.1,0 2,-0.9 2,-2s-0.9,-2 -2,-2 -2,0.9 -2,2 0.9,2 2,2zM18,14c1.1,0 2,-0.9 2,-2s-0.9,-2 -2,-2 -2,0.9 -2,2 0.9,2 2,2zM18,20c1.1,0 2,-0.9 2,-2s-0.9,-2 -2,-2 -2,0.9 -2,2 0.9,2 2,2z" />
+      </svg></button> <a href="#" onclick="showGoogleInfo('로그인')" style="background: #1a73e8; color: white; padding: 9px 23px; border-radius: 4px; text-decoration: none; margin-left: 8px;">로그인</a>
+    </nav>
+   </header>
+   <main class="google-main">
+    <div class="google-logo"><span class="g1">G</span><span class="o1">o</span><span class="o2">o</span><span class="g2">g</span><span class="l">l</span><span class="e">e</span>
+    </div>
+    <div class="search-container">
+     <div class="search-box-wrapper"><input type="text" class="search-box" id="google-search" placeholder="">
+      <div class="search-icons">
+       <svg class="search-icon" viewbox="0 0 24 24"><path fill="#9aa0a6" d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z" />
+       </svg>
+       <svg class="search-icon" viewbox="0 0 24 24"><path fill="#4285f4" d="M12 2C13.1 2 14 2.9 14 4C14 5.1 13.1 6 12 6C10.9 6 10 5.1 10 4C10 2.9 10.9 2 12 2ZM21 9V7L15 1L13.5 2.5L16.17 5.17C15.24 5.06 14.32 5 13.38 5C10.38 5.01 7.7 6.27 5.82 8.38L7.23 9.79C8.69 8.33 10.75 7.5 13.03 7.5C14.05 7.5 15.05 7.71 16 8.09V9H21ZM3.9 8.5L2.5 9.9L5.1 12.5C5.04 12.99 5 13.49 5 14C5 18.42 8.58 22 13 22C14.95 22 16.75 21.3 18.15 20.15L20.1 22.1L21.5 20.7L3.9 8.5ZM13 20C9.69 20 7 17.31 7 14C7 13.36 7.1 12.73 7.29 12.14L10.86 15.71C11.45 15.9 12.08 16 12.72 16H13C16.31 16 19 13.31 19 10V9.85L15.15 13.7C14.31 16.96 13 20 13 20Z" />
+       </svg>
+      </div>
+     </div>
+    </div>
+    <div class="search-buttons"><button class="search-btn" onclick="performGoogleSearch()">Google 검색</button> <button class="search-btn">I'm Feeling Lucky</button>
+    </div>
+   </main>
+   <footer class="google-footer">
+    <div class="footer-country">
+     대한민국
+    </div>
+    <div class="footer-links">
+     <div class="footer-left"><a href="#" onclick="showGoogleInfo('광고')">광고</a> <a href="#" onclick="showGoogleInfo('비즈니스')">비즈니스</a> <a href="#" onclick="showGoogleInfo('검색의 원리')">검색의 원리</a>
+     </div>
+     <div class="footer-right"><a href="#" onclick="showGoogleInfo('개인정보처리방침')">개인정보처리방침</a> <a href="#" onclick="showGoogleInfo('약관')">약관</a> <a href="#" onclick="showGoogleInfo('설정')">설정</a>
+     </div>
+    </div>
+   </footer>
+  </div><!-- Google Search Results Page -->
+  <div class="google-results-page" id="google-results-page">
+   <header class="results-header">
+    <div class="results-top-bar">
+     <div class="results-logo" onclick="goBackToGoogle()"><span class="g1">G</span><span class="o1">o</span><span class="o2">o</span><span class="g2">g</span><span class="l">l</span><span class="e">e</span>
+     </div>
+     <div class="results-search-container"><input type="text" class="results-search-box" id="results-search" readonly>
+      <div class="results-search-icons">
+       <svg class="search-icon" viewbox="0 0 24 24"><path fill="#9aa0a6" d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z" />
+       </svg>
+      </div>
+     </div>
+    </div>
+    <nav class="results-nav">
+     <div class="results-nav-items"><a href="#" class="results-nav-item active">
+       <svg class="nav-icon" viewbox="0 0 24 24">
+        <path fill="currentColor" d="M10,2L9,3H4A1,1 0 0,0 3,4V7A1,1 0 0,0 4,8H20A1,1 0 0,0 21,7V4A1,1 0 0,0 20,3H15L14,2H10M4,9V19A1,1 0 0,0 5,20H19A1,1 0 0,0 20,19V9H4Z" />
+       </svg> 전체 </a> <a href="#" class="results-nav-item">
+       <svg class="nav-icon" viewbox="0 0 24 24">
+        <path fill="currentColor" d="M8.5,13.5L11,16.5L14.5,12L19,18H5M21,19V5C21,3.89 20.1,3 19,3H5A2,2 0 0,0 3,5V19A2,2 0 0,0 5,21H19A2,2 0 0,0 21,19Z" />
+       </svg> 이미지 </a> <a href="#" class="results-nav-item">
+       <svg class="nav-icon" viewbox="0 0 24 24">
+        <path fill="currentColor" d="M20,11H4V8H20M20,15H13V13H20M20,19H13V17H20M11,19H4V13H11M20.33,4.67L18.67,3L17,4.67L15.33,3L13.67,4.67L12,3L10.33,4.67L8.67,3L7,4.67L5.33,3L3.67,4.67L2,3V19A2,2 0 0,0 4,21H20A2,2 0 0,0 22,19V3L20.33,4.67Z" />
+       </svg> 뉴스 </a> <a href="#" class="results-nav-item">
+       <svg class="nav-icon" viewbox="0 0 24 24">
+        <path fill="currentColor" d="M17,10.5V7A1,1 0 0,0 16,6H4A1,1 0 0,0 3,7V10.5A1,1 0 0,0 4,11.5H16A1,1 0 0,0 17,10.5M20,2H8A2,2 0 0,0 6,4V16A2,2 0 0,0 8,18H20A2,2 0 0,0 22,16V4A2,2 0 0,0 20,2Z" />
+       </svg> 동영상 </a> <a href="#" class="results-nav-item">
+       <svg class="nav-icon" viewbox="0 0 24 24">
+        <path fill="currentColor" d="M12,18H6V14H12M21,14V12L20,7H4L3,12V14H4V20A1,1 0 0,0 5,21H11A1,1 0 0,0 12,20V14H18V20A1,1 0 0,0 19,21H20A1,1 0 0,0 21,20V14M20,4H4V6H20V4Z" />
+       </svg> 쇼핑 </a> <a href="#" class="results-nav-item">더보기</a>
+     </div>
+    </nav>
+   </header>
+   <main class="results-content">
+    <div class="results-info">
+     검색결과 약 1,234,567개 (0.45초)
+    </div>
+    <div class="search-result">
+     <div class="result-url-line">
+      <div class="result-favicon"></div>
+      <div class="result-url">
+       www.snu.ac.kr
+      </div>
+      <div class="result-breadcrumb">
+       › 서울대학교
+      </div>
+     </div><a href="#" class="result-title" onclick="goToSNUPage()">서울대학교</a>
+     <div class="result-description">
+      서울대학교 공식 홈페이지입니다. 대학소개, 입학안내, 학사정보, 연구, 국제교류, 캠퍼스생활 등의 정보를 제공합니다.
+     </div>
+    </div>
+    <div class="search-result">
+     <div class="result-url-line">
+      <div class="result-favicon"></div>
+      <div class="result-url">
+       admission.snu.ac.kr
+      </div>
+      <div class="result-breadcrumb">
+       › 입학본부 › 합격자발표
+      </div>
+     </div><a href="#" class="result-title" onclick="goToSNUPage()">서울대학교 입학본부 - 합격자 발표</a>
+     <div class="result-date">
+      2024. 12. 28.
+     </div>
+     <div class="result-description">
+      2026학년도 서울대학교 정시모집 합격자를 발표합니다. 합격자 조회 시스템을 통해 확인하실 수 있습니다.
+     </div>
+    </div>
+    <div class="search-result">
+     <div class="result-url-line">
+      <div class="result-favicon"></div>
+      <div class="result-url">
+       news.snu.ac.kr
+      </div>
+      <div class="result-breadcrumb">
+       › 뉴스
+      </div>
+     </div><a href="#" class="result-title">서울대학교 뉴스</a>
+     <div class="result-description">
+      서울대학교의 최신 소식과 공지사항을 확인하실 수 있습니다. 학사일정, 행사안내, 연구성과 등을 제공합니다.
+     </div>
+    </div>
+    <div class="search-result">
+     <div class="result-url-line">
+      <div class="result-favicon"></div>
+      <div class="result-url">
+       library.snu.ac.kr
+      </div>
+      <div class="result-breadcrumb">
+       › 중앙도서관
+      </div>
+     </div><a href="#" class="result-title">서울대학교 중앙도서관</a>
+     <div class="result-description">
+      서울대학교 중앙도서관 홈페이지입니다. 도서검색, 전자자료, 이용안내 등의 서비스를 제공합니다.
+     </div>
+    </div>
+   </main><button class="back-to-previous" onclick="goBackToGoogle()">← 이전</button>
+  </div><!-- Seoul National University Homepage -->
+  <div class="snu-page" id="snu-page">
+   <header class="snu-header">
+    <div class="snu-top-bar">
+     <div class="snu-top-content">
+      <div class="snu-lang"><a href="#" class="active">한국어</a> <a href="#">English</a> <a href="#">中文</a>
+      </div>
+      <div class="snu-top-right"><a href="#">포털시스템</a> <a href="#">웹메일</a> <a href="#">도서관</a> <a href="#">사이트맵</a>
+      </div>
+     </div>
+    </div>
+    <div class="snu-main-header">
+     <div class="snu-logo-section">
+      <div class="snu-logo"><img src="https://www.snu.ac.kr/images/common/logo.png" alt="서울대학교 로고" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+       <svg viewbox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" style="display: none;"><!-- 실제 서울대 로고 디자인 --> <circle cx="50" cy="50" r="48" fill="#003366" stroke="none" /> <circle cx="50" cy="50" r="44" fill="white" stroke="none" /> <!-- 서울대 심볼 --> <g transform="translate(50,50)"><!-- 중앙 원형 디자인 -->
+         <circle cx="0" cy="0" r="35" fill="none" stroke="#003366" stroke-width="2" /> <!-- 상단 아치 -->
+         <path d="M -20 -15 Q 0 -25 20 -15" fill="none" stroke="#003366" stroke-width="3" /> <!-- 하단 아치 -->
+         <path d="M -20 15 Q 0 25 20 15" fill="none" stroke="#003366" stroke-width="3" /> <!-- 중앙 세로선 -->
+         <line x1="0" y1="-20" x2="0" y2="20" stroke="#003366" stroke-width="2" /> <!-- 좌우 대각선 -->
+         <line x1="-15" y1="-10" x2="15" y2="10" stroke="#003366" stroke-width="1.5" />
+         <line x1="15" y1="-10" x2="-15" y2="10" stroke="#003366" stroke-width="1.5" />
+        </g> <!-- 상단 텍스트 --> <text x="50" y="20" text-anchor="middle" font-family="serif" font-size="6" font-weight="bold" fill="#003366">
+         서울대학교
+        </text> <!-- 하단 영문 --> <text x="50" y="90" text-anchor="middle" font-family="serif" font-size="4" fill="#003366">
+         SEOUL NATIONAL UNIVERSITY
+        </text>
+       </svg>
+      </div>
+      <div class="snu-title">
+       <h1 id="university-name">서울대학교</h1>
+       <p>Seoul National University</p>
+      </div>
+     </div>
+     <div class="snu-header-right"><input type="text" class="snu-search-box" id="snu-search-input" placeholder="통합검색">
+      <div class="snu-quick-menu"><a href="#" class="snu-quick-btn" onclick="showAdmissionInfo()">입학</a> <a href="#" class="snu-quick-btn" onclick="showAcademicInfo()">학사</a> <a href="#" class="snu-quick-btn" onclick="showResearchInfo()">연구</a>
+      </div>
+     </div>
+    </div>
+    <nav class="snu-nav">
+     <div class="snu-nav-content"><a href="#" class="snu-nav-item" onclick="showUniversityInfo()">대학소개</a> <a href="#" class="snu-nav-item active" onclick="showAdmissionInfo()">입학안내</a> <a href="#" class="snu-nav-item" onclick="showAcademicInfo()">학사정보</a> <a href="#" class="snu-nav-item" onclick="showResearchInfo()">연구</a> <a href="#" class="snu-nav-item" onclick="showInternationalInfo()">국제교류</a> <a href="#" class="snu-nav-item" onclick="showCampusInfo()">캠퍼스생활</a> <a href="#" class="snu-nav-item" onclick="showGraduateInfo()">대학원</a> <a href="#" class="snu-nav-item" onclick="showIndustryInfo()">산학협력</a>
+     </div>
+    </nav>
+   </header>
+   <main class="snu-content">
+    <div class="snu-breadcrumb">
+     홈 &gt; 입학안내 &gt; 학부입학 &gt; 모집요강 &gt; 합격자발표
+    </div>
+    <div class="snu-hero-section">
+     <div class="hero-content">
+      <h1 class="hero-title">2026학년도 정시모집 합격자 발표</h1>
+      <p class="hero-subtitle">서울대학교 입학을 축하드립니다</p>
+      <div class="hero-stats">
+       <div class="stat-item">
+        <div class="stat-number">
+         3,233
+        </div>
+        <div class="stat-label">
+         모집인원
+        </div>
+       </div>
+       <div class="stat-item">
+        <div class="stat-number">
+         28,457
+        </div>
+        <div class="stat-label">
+         지원자수
+        </div>
+       </div>
+       <div class="stat-item">
+        <div class="stat-number">
+         8.8:1
+        </div>
+        <div class="stat-label">
+         경쟁률
+        </div>
+       </div>
+      </div>
+     </div>
+    </div>
+    <div class="snu-main-content">
+     <div class="snu-sidebar">
+      <h3>입학안내</h3>
+      <ul class="sidebar-menu">
+       <li><a href="#" onclick="showRecruitmentInfo()">모집요강</a></li>
+       <li><a href="#" class="active" onclick="goToAdmissionResult()">합격자발표</a></li>
+       <li><a href="#" onclick="showRegistrationInfo()">등록안내</a></li>
+       <li><a href="#" onclick="showScheduleInfo()">전형일정</a></li>
+       <li><a href="#" onclick="showCounselingInfo()">입학상담</a></li>
+       <li><a href="#" onclick="showFAQInfo()">FAQ</a></li>
+       <li><a href="#" onclick="showPastExamsInfo()">기출문제</a></li>
+       <li><a href="#" onclick="showStatisticsInfo()">통계자료</a></li>
+      </ul>
+     </div>
+     <div class="snu-main-area">
+      <div class="announcement-banner">
+       <div class="banner-icon">
+        📢
+       </div>
+       <div class="banner-content">
+        <h3>합격자 발표 안내</h3>
+        <p id="announcement-date">2024년 12월 28일(토) 오후 2시 발표</p>
+       </div>
+       <div class="banner-status"><span class="status-badge active">발표완료</span>
+       </div>
+      </div>
+      <div class="quick-actions">
+       <div class="action-card primary" onclick="goToAdmissionResult()">
+        <div class="card-icon">
+         🎓
+        </div>
+        <h3>합격자 조회</h3>
+        <p>수험번호와 성명으로<br>
+         합격 여부를 확인하세요</p>
+        <div class="card-arrow">
+         →
+        </div>
+       </div>
+       <div class="action-card" onclick="showRegistrationInfo()">
+        <div class="card-icon">
+         📋
+        </div>
+        <h3>등록안내</h3>
+        <p>합격자 등록 절차 및<br>
+         필요서류를 확인하세요</p>
+        <div class="card-arrow">
+         →
+        </div>
+       </div>
+       <div class="action-card" onclick="showCounselingInfo()">
+        <div class="card-icon">
+         📞
+        </div>
+        <h3>입학상담</h3>
+        <p>입학 관련 문의사항을<br>
+         상담받으실 수 있습니다</p>
+        <div class="card-arrow">
+         →
+        </div>
+       </div>
+      </div>
+      <div class="content-section">
+       <h3>📋 발표 개요</h3>
+       <div class="info-table modern">
+        <table>
+         <tbody>
+          <tr>
+           <td class="info-label">발표일시</td>
+           <td id="announcement-date-detail">2024년 12월 28일(토) 오후 2시</td>
+          </tr>
+          <tr>
+           <td class="info-label">발표대상</td>
+           <td>2026학년도 정시모집 지원자 (가/나/다군)</td>
+          </tr>
+          <tr>
+           <td class="info-label">조회방법</td>
+           <td>온라인 합격자 조회 시스템 (24시간 이용가능)</td>
+          </tr>
+          <tr>
+           <td class="info-label">등록기간</td>
+           <td id="registration-period-table">2024년 12월 30일(월) ~ 2025년 1월 3일(금)</td>
+          </tr>
+          <tr>
+           <td class="info-label">문의전화</td>
+           <td>02-880-6971~6977 (입학본부) / 평일 09:00~18:00</td>
+          </tr>
+         </tbody>
+        </table>
+       </div>
+      </div>
+      <div class="content-section">
+       <h3>⚠️ 중요 안내사항</h3>
+       <div class="notice-box important">
+        <ul class="notice-list enhanced">
+         <li><strong>등록 필수:</strong> 합격자는 반드시 등록기간 내에 등록을 완료하여야 합니다.</li>
+         <li><strong>미등록 시:</strong> 등록기간 내 미등록 시 합격이 자동 취소됩니다.</li>
+         <li><strong>이중등록 금지:</strong> 타 대학과의 이중등록은 불가합니다.</li>
+         <li><strong>서류 제출:</strong> 등록과 함께 필요서류를 기한 내 제출해야 합니다.</li>
+         <li><strong>추가 합격:</strong> 미등록으로 인한 결원 발생 시 추가 합격자를 발표할 수 있습니다.</li>
+        </ul>
+       </div>
+      </div>
+      <div class="content-section">
+       <h3>📞 문의처</h3>
+       <div class="contact-grid">
+        <div class="contact-card">
+         <h4>📞 전화상담</h4>
+         <p><strong>02-880-6971~6977</strong></p>
+         <p>평일 09:00~18:00<br>
+          토요일 09:00~13:00</p>
+        </div>
+        <div class="contact-card">
+         <h4>✉️ 이메일</h4>
+         <p><strong>snuadmit@snu.ac.kr</strong></p>
+         <p>24시간 접수<br>
+          2일 내 답변</p>
+        </div>
+        <div class="contact-card">
+         <h4>🏢 방문상담</h4>
+         <p><strong>입학본부 1층</strong></p>
+         <p>평일 09:00~17:00<br>
+          점심시간 12:00~13:00</p>
+        </div>
+       </div>
+      </div>
+     </div>
+    </div>
+   </main><button class="back-to-previous" onclick="goBackToGoogle()">← 이전</button>
+  </div><!-- Admission Result Page -->
+  <div class="admission-page" id="admission-page">
+   <header class="admission-header">
+    <h1>서울대학교 합격자 조회 시스템</h1>
+    <p>2026학년도 정시모집 합격자 조회</p>
+   </header>
+   <main class="admission-content">
+    <div class="exam-number-display">
+     <div class="label">
+      예시 수험번호 (테스트용)
+     </div>
+     <div class="number" id="generated-exam-number">
+      2026110010001
+     </div>
+     <div style="font-size: clamp(10px, 1.2vw, 12px); color: #6c757d; margin-top: 8px;">
+      ※ 실제 수험번호를 입력하시면 해당 정보로 조회됩니다
+     </div>
+    </div>
+    <div class="search-form-container" id="search-form-container">
+     <form id="admission-form">
+      <div class="form-group"><label for="student-name" class="form-label">성명</label> <input type="text" id="student-name" class="form-input" placeholder="홍길동" maxlength="4" required>
+      </div>
+      <div class="form-group"><label for="student-exam-number" class="form-label">수험번호 (13자리)</label> <input type="text" id="student-exam-number" class="form-input" placeholder="2026110010001" maxlength="13" pattern="[0-9]{13}" required>
+      </div><button type="submit" class="submit-btn">조회하기</button>
+     </form>
+    </div>
+    <div class="result-container" id="result-container">
+     <div class="result-header">
+      <h2>합격자 조회 결과</h2>
+     </div>
+     <table class="result-table">
+      <tbody>
+       <tr>
+        <td class="label-cell">성명</td>
+        <td class="value-cell" id="display-name">홍길동</td>
+       </tr>
+       <tr>
+        <td class="label-cell">수험번호</td>
+        <td class="value-cell" id="display-exam-number-result">2026-SNU-001234</td>
+       </tr>
+       <tr>
+        <td class="label-cell">합격여부</td>
+        <td class="value-cell pass-cell" id="display-pass-status">합격</td>
+       </tr>
+       <tr>
+        <td class="label-cell">모집단위</td>
+        <td class="value-cell" id="display-department">공과대학 컴퓨터공학부</td>
+       </tr>
+       <tr>
+        <td class="label-cell">전형구분</td>
+        <td class="value-cell" id="display-admission-type">정시 나군</td>
+       </tr>
+       <tr>
+        <td class="label-cell">합격구분</td>
+        <td class="value-cell" id="display-pass-type">정시합격</td>
+       </tr>
+       <tr>
+        <td class="label-cell">모집인원</td>
+        <td class="value-cell" id="display-quota">52명</td>
+       </tr>
+       <tr>
+        <td class="label-cell">경쟁률</td>
+        <td class="value-cell" id="display-competition-rate">12.3:1</td>
+       </tr>
+       <tr>
+        <td class="label-cell">총점</td>
+        <td class="value-cell" id="display-total-score">892.45점</td>
+       </tr>
+       <tr>
+        <td class="label-cell">국어</td>
+        <td class="value-cell" id="display-korean-score">73점</td>
+       </tr>
+       <tr>
+        <td class="label-cell">수학</td>
+        <td class="value-cell" id="display-math-score">88점</td>
+       </tr>
+       <tr>
+        <td class="label-cell">영어</td>
+        <td class="value-cell" id="display-english-score">58점</td>
+       </tr>
+       <tr>
+        <td class="label-cell">과학탐구1</td>
+        <td class="value-cell" id="display-science1-score">44점</td>
+       </tr>
+       <tr>
+        <td class="label-cell">과학탐구2</td>
+        <td class="value-cell" id="display-science2-score">29점</td>
+       </tr>
+       <tr>
+        <td class="label-cell">석차</td>
+        <td class="value-cell" id="display-rank">47 / 640명</td>
+       </tr>
+       <tr>
+        <td class="label-cell">등록기간</td>
+        <td class="value-cell" id="result-registration-period">2024.12.30(월) ~ 2025.01.03(금)</td>
+       </tr>
+      </tbody>
+     </table>
+     <div class="congratulations" id="congratulations-message">
+      🎉 합격을 축하합니다! 🎉
+     </div>
+     <div class="failure-message" id="failure-message" style="display: none; background: #f8d7da; border: 1px solid #f5c6cb; border-radius: 8px; padding: clamp(15px, 3vw, 20px); text-align: center; color: #721c24; font-size: clamp(16px, 2.2vw, 18px); font-weight: 600;">
+      😔 아쉽게도 불합격입니다. 다음 기회에 도전하세요.
+     </div>
+     <div style="text-align: center; margin-top: clamp(15px, 2vw, 20px); display: flex; gap: 10px; justify-content: center; flex-wrap: wrap;"><button class="back-btn" onclick="goBackToSearch()">다시 조회하기</button> <button class="back-btn" onclick="goToSNUMain()" style="background: #003366;">서울대 메인</button>
+     </div>
+     <div style="text-align: center; margin-top: clamp(10px, 1.5vw, 15px); padding-top: clamp(15px, 2vw, 20px); border-top: 1px solid #dee2e6;" id="failure-experience-section"><button onclick="showFailureExperience()" style="background: #dc3545; color: white; border: none; padding: clamp(8px, 1.5vw, 10px) clamp(15px, 2vw, 20px); border-radius: 4px; cursor: pointer; font-size: clamp(12px, 1.4vw, 14px); font-weight: 500;" id="failure-experience-btn">😔 불합격 한번 봐보기</button>
+     </div>
+    </div>
+   </main>
   </div>
   <script>
-    const defaultConfig = {
-      notice_title: '📢 안내',
-      notice_message: '이 사이트는 사용하지 않습니다.\n디스코드 채널을 통해 주문제작을 문의해주세요.',
-      background_color: '#1a1a2e',
-      text_color: '#ffffff',
-      secondary_text_color: '#e2e8f0',
-      accent_color: '#5865F2',
-      font_family: 'Noto Sans KR',
-      font_size: 18
-    };
-    
-    let config = { ...defaultConfig };
-    
-    async function onConfigChange(cfg) {
-      config = { ...defaultConfig, ...cfg };
-      
-      const titleEl = document.getElementById('notice-title');
-      const messageEl = document.getElementById('notice-message');
-      const container = document.getElementById('app-container');
-      
-      // 텍스트 업데이트
-      titleEl.textContent = config.notice_title || defaultConfig.notice_title;
-      
-      const message = config.notice_message || defaultConfig.notice_message;
-      messageEl.innerHTML = message.replace(/\n/g, '<br>');
-      
-      // 색상 업데이트
-      const bgColor = config.background_color || defaultConfig.background_color;
-      container.style.background = `linear-gradient(135deg, ${bgColor} 0%, #16213e 50%, #0f3460 100%)`;
-      
-      titleEl.style.color = config.text_color || defaultConfig.text_color;
-      messageEl.style.color = config.secondary_text_color || defaultConfig.secondary_text_color;
-      
-      // 폰트 업데이트
-      const fontFamily = config.font_family || defaultConfig.font_family;
-      const baseFontStack = 'sans-serif';
-      titleEl.style.fontFamily = `${fontFamily}, ${baseFontStack}`;
-      messageEl.style.fontFamily = `${fontFamily}, ${baseFontStack}`;
-      
-      // 폰트 사이즈 업데이트
-      const baseSize = config.font_size || defaultConfig.font_size;
-      titleEl.style.fontSize = `${baseSize * 2}px`;
-      messageEl.style.fontSize = `${baseSize}px`;
-    }
-    
-    function mapToCapabilities(cfg) {
-      return {
-        recolorables: [
-          {
-            get: () => cfg.background_color || defaultConfig.background_color,
-            set: (value) => {
-              cfg.background_color = value;
-              window.elementSdk.setConfig({ background_color: value });
-            }
-          },
-          {
-            get: () => cfg.text_color || defaultConfig.text_color,
-            set: (value) => {
-              cfg.text_color = value;
-              window.elementSdk.setConfig({ text_color: value });
-            }
-          },
-          {
-            get: () => cfg.secondary_text_color || defaultConfig.secondary_text_color,
-            set: (value) => {
-              cfg.secondary_text_color = value;
-              window.elementSdk.setConfig({ secondary_text_color: value });
-            }
-          },
-          {
-            get: () => cfg.accent_color || defaultConfig.accent_color,
-            set: (value) => {
-              cfg.accent_color = value;
-              window.elementSdk.setConfig({ accent_color: value });
-            }
-          }
-        ],
-        borderables: [],
-        fontEditable: {
-          get: () => cfg.font_family || defaultConfig.font_family,
-          set: (value) => {
-            cfg.font_family = value;
-            window.elementSdk.setConfig({ font_family: value });
-          }
-        },
-        fontSizeable: {
-          get: () => cfg.font_size || defaultConfig.font_size,
-          set: (value) => {
-            cfg.font_size = value;
-            window.elementSdk.setConfig({ font_size: value });
-          }
+        // 기본 설정
+        const defaultConfig = {
+            university_name: "서울대학교"
+        };
+
+        let currentExamNumber = '';
+
+        // 수험번호 생성 함수 (실제 패턴 사용)
+        function generateExamNumber() {
+            return generateRealisticExamNumber();
         }
-      };
-    }
-    
-    function mapToEditPanelValues(cfg) {
-      return new Map([
-        ['notice_title', cfg.notice_title || defaultConfig.notice_title],
-        ['notice_message', cfg.notice_message || defaultConfig.notice_message]
-      ]);
-    }
-    
-    // SDK 초기화
-    if (window.elementSdk) {
-      window.elementSdk.init({
-        defaultConfig,
-        onConfigChange,
-        mapToCapabilities,
-        mapToEditPanelValues
-      });
-    }
-    
-    // Lucide 아이콘 초기화
-    lucide.createIcons();
-  </script>
-</html>
+
+        // 날짜 포맷 함수
+        function formatDate(date) {
+            const year = date.getFullYear();
+            const month = (date.getMonth() + 1).toString().padStart(2, '0');
+            const day = date.getDate().toString().padStart(2, '0');
+            const weekdays = ['일', '월', '화', '수', '목', '금', '토'];
+            const weekday = weekdays[date.getDay()];
+            return `${year}년 ${month}월 ${day}일(${weekday})`;
+        }
+
+        // 날짜 포맷 함수 (점 구분)
+        function formatDateDot(date) {
+            const year = date.getFullYear();
+            const month = (date.getMonth() + 1).toString().padStart(2, '0');
+            const day = date.getDate().toString().padStart(2, '0');
+            return `${year}.${month}.${day}`;
+        }
+
+        // 현재 날짜 업데이트
+        function updateDates() {
+            const today = new Date();
+            const registrationStart = new Date(today);
+            registrationStart.setDate(today.getDate() + 2);
+            const registrationEnd = new Date(registrationStart);
+            registrationEnd.setDate(registrationStart.getDate() + 4);
+
+            // 발표일시 업데이트 (여러 위치)
+            const announcementText = `${formatDate(today)} 오후 2시 발표`;
+            document.getElementById('announcement-date').textContent = announcementText;
+            document.getElementById('announcement-date-detail').textContent = `${formatDate(today)} 오후 2시`;
+            
+            // 등록기간 업데이트 (여러 위치)
+            const regPeriodText = `등록기간: ${formatDate(registrationStart)} ~ ${formatDate(registrationEnd)}`;
+            const regPeriodTableText = `${formatDate(registrationStart)} ~ ${formatDate(registrationEnd)}`;
+            const regPeriodDotText = `${formatDateDot(registrationStart)} ~ ${formatDateDot(registrationEnd)}`;
+            
+            // 모든 등록기간 요소 업데이트
+            const regPeriodElement = document.getElementById('registration-period-table');
+            if (regPeriodElement) {
+                regPeriodElement.textContent = regPeriodTableText;
+            }
+            
+            // 결과 테이블 등록기간 업데이트
+            const resultRegElement = document.getElementById('result-registration-period');
+            if (resultRegElement) {
+                resultRegElement.textContent = regPeriodDotText;
+            }
+        }
+
+        // 로딩 화면 표시
+        function showGoogleLoading() {
+            document.getElementById('google-loading').style.display = 'flex';
+        }
+
+        function hideGoogleLoading() {
+            document.getElementById('google-loading').style.display = 'none';
+        }
+
+        function showSNULoading() {
+            document.getElementById('snu-loading').style.display = 'flex';
+        }
+
+        function hideSNULoading() {
+            document.getElementById('snu-loading').style.display = 'none';
+        }
+
+        // 페이지 로드 시 초기화
+        document.addEventListener('DOMContentLoaded', function() {
+            currentExamNumber = generateExamNumber();
+            document.getElementById('generated-exam-number').textContent = currentExamNumber;
+            updateDates();
+        });
+
+        // Google 검색 기능
+        function performGoogleSearch() {
+            const searchTerm = document.getElementById('google-search').value.trim();
+            if (searchTerm) {
+                // 로딩 화면 표시
+                showGoogleLoading();
+                
+                // 0.3초 후 검색 결과 페이지로 이동
+                setTimeout(() => {
+                    document.getElementById('results-search').value = searchTerm;
+                    document.getElementById('google-page').style.display = 'none';
+                    hideGoogleLoading();
+                    document.getElementById('google-results-page').style.display = 'block';
+                    
+                    // 검색 결과 업데이트
+                    updateSearchResults(searchTerm);
+                }, 300);
+            }
+        }
+
+        // 검색 결과 페이지에서 재검색 함수
+        function performResultsSearch() {
+            const searchTerm = document.getElementById('results-search').value.trim();
+            if (searchTerm) {
+                // 검색 결과 업데이트
+                updateSearchResults(searchTerm);
+            }
+        }
+
+        // 검색 결과 업데이트 함수
+        function updateSearchResults(searchTerm) {
+            const resultsInfo = document.querySelector('.results-info');
+            const resultsContent = document.querySelector('.results-content');
+            
+            // "서울"이 포함된 검색어인지 확인
+            if (searchTerm.includes('서울')) {
+                // 서울 관련 검색 결과 표시
+                const randomResults = Math.floor(Math.random() * 900000) + 100000;
+                const randomTime = (Math.random() * 0.5 + 0.1).toFixed(2);
+                resultsInfo.textContent = `"${searchTerm}" 검색결과 약 ${randomResults.toLocaleString()}개 (${randomTime}초)`;
+                
+                // 기존 검색 결과 표시
+                showNormalResults();
+            } else {
+                // 검색 결과 없음 표시
+                resultsInfo.textContent = `"${searchTerm}"에 대한 검색결과가 없습니다.`;
+                showNoResults(searchTerm);
+            }
+        }
+
+        // 일반 검색 결과 표시
+        function showNormalResults() {
+            const resultsContent = document.querySelector('.results-content');
+            const existingResults = resultsContent.querySelectorAll('.search-result');
+            existingResults.forEach(result => result.style.display = 'block');
+            
+            // 검색 결과 없음 메시지 숨기기
+            const noResultsDiv = document.getElementById('no-results-message');
+            if (noResultsDiv) {
+                noResultsDiv.style.display = 'none';
+            }
+        }
+
+        // 검색 결과 없음 표시
+        function showNoResults(searchTerm) {
+            const resultsContent = document.querySelector('.results-content');
+            
+            // 기존 검색 결과 숨기기
+            const existingResults = resultsContent.querySelectorAll('.search-result');
+            existingResults.forEach(result => result.style.display = 'none');
+            
+            // 검색 결과 없음 메시지 생성 또는 업데이트
+            let noResultsDiv = document.getElementById('no-results-message');
+            if (!noResultsDiv) {
+                noResultsDiv = document.createElement('div');
+                noResultsDiv.id = 'no-results-message';
+                noResultsDiv.style.cssText = `
+                    text-align: center;
+                    padding: 60px 20px;
+                    color: #70757a;
+                `;
+                
+                noResultsDiv.innerHTML = `
+                    <div style="margin-bottom: 30px;">
+                        <svg width="120" height="120" viewBox="0 0 24 24" style="opacity: 0.3;">
+                            <path fill="#9aa0a6" d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/>
+                        </svg>
+                    </div>
+                    <h3 style="font-size: 20px; color: #202124; margin: 0 0 16px 0; font-weight: 400;">일치하는 검색 결과가 없습니다.</h3>
+                    <p style="font-size: 16px; color: #70757a; margin: 0 0 24px 0; line-height: 1.4;">
+                        "<strong>${searchTerm}</strong>"에 대한 검색결과를 찾을 수 없습니다.
+                    </p>
+                    <div style="font-size: 14px; color: #70757a; line-height: 1.6;">
+                        <p style="margin: 8px 0;"><strong>검색 도움말:</strong></p>
+                        <p style="margin: 4px 0;">• 모든 검색어의 철자가 정확한지 확인하세요.</p>
+                        <p style="margin: 4px 0;">• 다른 검색어를 사용해 보세요.</p>
+                        <p style="margin: 4px 0;">• 더 일반적인 검색어를 사용해 보세요.</p>
+                        <p style="margin: 4px 0;">• 검색어 수를 줄여보세요.</p>
+                    </div>
+                `;
+                
+                resultsContent.appendChild(noResultsDiv);
+            } else {
+                // 기존 메시지 업데이트
+                const searchTermElement = noResultsDiv.querySelector('strong');
+                if (searchTermElement) {
+                    searchTermElement.textContent = searchTerm;
+                }
+                noResultsDiv.style.display = 'block';
+            }
+        }
+
+        // Enter 키로 검색 (메인 페이지)
+        document.getElementById('google-search').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                performGoogleSearch();
+            }
+        });
+
+        // 검색 결과 페이지에서 재검색 기능
+        document.addEventListener('DOMContentLoaded', function() {
+            // 결과 페이지 검색박스 Enter 키 이벤트
+            const resultsSearchBox = document.getElementById('results-search');
+            if (resultsSearchBox) {
+                resultsSearchBox.addEventListener('keypress', function(e) {
+                    if (e.key === 'Enter') {
+                        performResultsSearch();
+                    }
+                });
+                
+                // 검색박스 클릭 시 편집 가능하게 만들기
+                resultsSearchBox.addEventListener('click', function() {
+                    this.removeAttribute('readonly');
+                    this.focus();
+                });
+            }
+            
+            // 검색 아이콘 클릭으로도 검색
+            const searchIcons = document.querySelectorAll('.search-icon');
+            searchIcons.forEach(icon => {
+                if (icon.parentElement.classList.contains('search-icons')) {
+                    icon.addEventListener('click', performGoogleSearch);
+                } else if (icon.parentElement.classList.contains('results-search-icons')) {
+                    icon.addEventListener('click', performResultsSearch);
+                }
+            });
+        });
+
+        // 구글 홈으로 돌아가기
+        function goBackToGoogle() {
+            document.getElementById('google-results-page').style.display = 'none';
+            document.getElementById('snu-page').style.display = 'none';
+            document.getElementById('admission-page').style.display = 'none';
+            document.getElementById('google-page').style.display = 'flex';
+            document.getElementById('google-search').value = '';
+        }
+
+        // 서울대 페이지로 이동
+        function goToSNUPage() {
+            // 로딩 화면 표시
+            showSNULoading();
+            
+            // 0.4초 후 서울대 페이지로 이동
+            setTimeout(() => {
+                document.getElementById('google-results-page').style.display = 'none';
+                hideSNULoading();
+                document.getElementById('snu-page').style.display = 'block';
+            }, 400);
+        }
+
+        // 합격자 조회 페이지로 이동
+        function goToAdmissionResult() {
+            // 로딩 화면 표시
+            showSNULoading();
+            
+            // 0.3초 후 합격자 조회 페이지로 이동
+            setTimeout(() => {
+                document.getElementById('snu-page').style.display = 'none';
+                hideSNULoading();
+                document.getElementById('admission-page').style.display = 'block';
+            }, 300);
+        }
+
+        // 다시 조회하기에서도 로딩 표시
+        function goBackToSearch() {
+            showSNULoading();
+            
+            setTimeout(() => {
+                document.getElementById('result-container').style.display = 'none';
+                document.getElementById('search-form-container').style.display = 'block';
+                document.getElementById('admission-form').reset();
+                hideSNULoading();
+            }, 200);
+        }
+
+        // 서울대 메인으로 돌아가기
+        function goToSNUMain() {
+            showSNULoading();
+            
+            setTimeout(() => {
+                document.getElementById('admission-page').style.display = 'none';
+                hideSNULoading();
+                document.getElementById('snu-page').style.display = 'block';
+            }, 300);
+        }
+
+        // 실제 서울대 학과별 모집인원과 커트라인 데이터 (2025년 기준)
+        const realDepartmentData = {
+            '의과대학 의학과': { quota: 135, cutline: 298.2, competitionRate: 4.8, group: '나군' },
+            '치의학대학원 치의학과': { quota: 32, cutline: 296.8, competitionRate: 4.2, group: '나군' },
+            '약학대학 약학과': { quota: 80, cutline: 295.1, competitionRate: 5.6, group: '나군' },
+            '공과대학 컴퓨터공학부': { quota: 52, cutline: 294.3, competitionRate: 13.8, group: '나군' },
+            '공과대학 전기정보공학부': { quota: 65, cutline: 292.7, competitionRate: 9.2, group: '나군' },
+            '자연과학대학 수학과': { quota: 28, cutline: 291.8, competitionRate: 6.7, group: '가군' },
+            '경영대학 경영학과': { quota: 120, cutline: 291.2, competitionRate: 16.8, group: '나군' },
+            '사회과학대학 경제학부': { quota: 85, cutline: 290.5, competitionRate: 12.1, group: '가군' },
+            '인문대학 국어국문학과': { quota: 45, cutline: 289.8, competitionRate: 8.3, group: '가군' },
+            '인문대학 영어영문학과': { quota: 40, cutline: 289.4, competitionRate: 9.7, group: '가군' },
+            '자연과학대학 물리천문학부': { quota: 35, cutline: 289.1, competitionRate: 6.4, group: '가군' },
+            '자연과학대학 화학부': { quota: 42, cutline: 288.5, competitionRate: 7.2, group: '가군' },
+            '공과대학 기계공학부': { quota: 78, cutline: 288.2, competitionRate: 10.1, group: '나군' },
+            '사회과학대학 정치외교학부': { quota: 55, cutline: 287.8, competitionRate: 8.9, group: '가군' },
+            '인문대학 철학과': { quota: 25, cutline: 287.1, competitionRate: 5.2, group: '가군' },
+            '농업생명과학대학 식물생산과학부': { quota: 38, cutline: 285.5, competitionRate: 4.1, group: '다군' },
+            '미술대학 동양화과': { quota: 15, cutline: 283.8, competitionRate: 14.2, group: '다군' },
+            '음악대학 성악과': { quota: 12, cutline: 282.6, competitionRate: 9.8, group: '다군' },
+            '수의과대학 수의학과': { quota: 40, cutline: 292.1, competitionRate: 7.8, group: '나군' },
+            '사범대학 교육학과': { quota: 30, cutline: 288.8, competitionRate: 6.6, group: '가군' },
+            '공과대학 건축학과': { quota: 25, cutline: 293.5, competitionRate: 11.4, group: '나군' },
+            '공과대학 화학생물공학부': { quota: 68, cutline: 287.9, competitionRate: 8.8, group: '나군' },
+            '자연과학대학 생명과학부': { quota: 55, cutline: 286.7, competitionRate: 7.5, group: '가군' },
+            '사회과학대학 심리학과': { quota: 35, cutline: 289.6, competitionRate: 10.3, group: '가군' },
+            '인문대학 중어중문학과': { quota: 30, cutline: 286.4, competitionRate: 6.8, group: '가군' },
+            '인문대학 불어불문학과': { quota: 25, cutline: 285.9, competitionRate: 5.9, group: '가군' },
+            '사범대학 국어교육과': { quota: 28, cutline: 287.3, competitionRate: 7.1, group: '가군' },
+            '사범대학 수학교육과': { quota: 25, cutline: 288.1, competitionRate: 8.2, group: '가군' },
+            '간호대학 간호학과': { quota: 75, cutline: 286.2, competitionRate: 9.4, group: '나군' },
+            '자유전공학부': { quota: 80, cutline: 290.8, competitionRate: 14.7, group: '나군' }
+        };
+
+        // 실제 성명 데이터베이스 (한국 성씨 + 이름 조합)
+        const koreanSurnames = ['김', '이', '박', '최', '정', '강', '조', '윤', '장', '임', '한', '오', '서', '신', '권', '황', '안', '송', '류', '전', '홍', '고', '문', '양', '손', '배', '조', '백', '허', '유', '남', '심', '노', '정', '하', '곽', '성', '차', '주', '우', '구', '신', '임', '나', '전', '민', '유', '진', '지', '엄', '채', '원', '천', '방', '공', '강', '현', '함', '변', '염', '양', '변', '여', '추', '노', '도', '소', '신', '석', '선', '설', '마', '길', '주', '연', '방', '위', '표', '명', '기', '반', '왕', '금', '옥', '육', '인', '맹', '제', '모', '장', '남', '탁', '국', '여', '진', '어', '은', '편', '구', '용'];
+        
+        const koreanGivenNames = [
+            // 남성 이름
+            ['민준', '서준', '도윤', '예준', '시우', '하준', '주원', '지호', '준서', '준우', '현우', '도현', '건우', '우진', '선우', '연우', '유준', '정우', '승우', '승현', '시윤', '준혁', '은우', '지우', '윤우', '준영', '시후', '진우', '지훈', '민성', '준호', '성민', '성현', '현준', '지환', '승민', '지완', '유찬', '윤호', '태윤', '민규', '한결', '시원', '민찬', '유진', '재윤', '시현', '동현', '재민', '이준'],
+            // 여성 이름
+            ['서연', '서윤', '지우', '서현', '민서', '하은', '하윤', '윤서', '지유', '지민', '채원', '다은', '예은', '소율', '수아', '지원', '예린', '서영', '예원', '유나', '채은', '서진', '유진', '다인', '하린', '소은', '예서', '가은', '나은', '시은', '수빈', '윤아', '채윤', '서우', '다연', '예나', '하영', '서율', '지안', '유빈', '서아', '다현', '예진', '소현', '지율', '하늘', '예지', '서은', '채린', '유주']
+        ];
+
+        // 실제 수험번호 패턴 생성 (년도 + 지역코드 + 학교코드 + 개인번호)
+        function generateRealisticExamNumber() {
+            const year = '2026'; // 2026학년도
+            const regionCodes = ['11', '26', '27', '28', '29', '30', '31', '36', '41', '42', '43', '44', '45', '46', '47', '48', '50'];
+            const regionCode = regionCodes[Math.floor(Math.random() * regionCodes.length)];
+            const schoolCode = Math.floor(Math.random() * 999).toString().padStart(3, '0');
+            const personalCode = Math.floor(Math.random() * 9999).toString().padStart(4, '0');
+            return `${year}${regionCode}${schoolCode}${personalCode}`;
+        }
+
+        // 실제 점수 계산 (표준점수 + 변환표준점수)
+        function calculateRealisticScore(department, isPass) {
+            const deptData = realDepartmentData[department];
+            if (!deptData) return { total: '0.00', korean: '0', math: '0', english: '0', science1: '0', science2: '0' };
+            
+            let baseScore = deptData.cutline;
+            
+            if (isPass) {
+                // 합격자는 커트라인 이상의 점수
+                baseScore += Math.random() * 3 + 0.5; // 커트라인 + 0.5~3.5점
+            } else {
+                // 불합격자는 커트라인 미만의 점수
+                baseScore -= Math.random() * 8 + 1; // 커트라인 - 1~9점
+            }
+            
+            // 각 과목별 표준점수 (실제 수능 점수 범위 고려)
+            const korean = Math.floor(Math.random() * 50 + 100); // 100~150점
+            const math = Math.floor(Math.random() * 50 + 100);   // 100~150점
+            const english = Math.floor(Math.random() * 50 + 100); // 100~150점
+            const science1 = Math.floor(Math.random() * 30 + 60); // 60~90점
+            const science2 = Math.floor(Math.random() * 30 + 60); // 60~90점
+            
+            return {
+                total: baseScore.toFixed(2),
+                korean: korean.toString(),
+                math: math.toString(),
+                english: english.toString(),
+                science1: science1.toString(),
+                science2: science2.toString()
+            };
+        }
+
+        // 실제 석차 계산
+        function calculateRealisticRank(department, score) {
+            const deptData = realDepartmentData[department];
+            if (!deptData) return { rank: 1, total: 1 };
+            
+            const cutlineScore = parseFloat(deptData.cutline);
+            const userScore = parseFloat(score);
+            const quota = deptData.quota;
+            
+            // 점수에 따른 석차 계산 (점수가 높을수록 석차가 좋음)
+            const scoreDiff = userScore - cutlineScore;
+            let rank;
+            
+            if (scoreDiff >= 0) {
+                // 합격권: 1등부터 모집인원까지
+                rank = Math.max(1, Math.floor((5 - scoreDiff) * quota / 5));
+                rank = Math.min(rank, quota);
+            } else {
+                // 불합격권: 모집인원 이후
+                rank = quota + Math.floor(Math.abs(scoreDiff) * 10) + 1;
+            }
+            
+            const totalApplicants = Math.floor(quota * deptData.competitionRate);
+            
+            return {
+                rank: rank,
+                total: totalApplicants
+            };
+        }
+
+        // 실제 합격자 정보 생성
+        function generateRealisticAdmissionInfo(inputName, examNumber) {
+            // 수험번호 기반으로 시드 생성 (같은 수험번호는 항상 같은 결과)
+            const seed = examNumber.split('').reduce((a, b) => a + b.charCodeAt(0), 0);
+            
+            // 시드 기반 랜덤 함수
+            function seededRandom(seed) {
+                const x = Math.sin(seed) * 10000;
+                return x - Math.floor(x);
+            }
+            
+            // 학과 선택 (시드 기반)
+            const departments = Object.keys(realDepartmentData);
+            const deptIndex = Math.floor(seededRandom(seed) * departments.length);
+            const selectedDept = departments[deptIndex];
+            const deptData = realDepartmentData[selectedDept];
+            
+            // 합격/불합격 결정 (70% 합격률로 설정)
+            const isPass = seededRandom(seed + 1) < 0.7;
+            
+            // 점수 계산
+            const scores = calculateRealisticScore(selectedDept, isPass);
+            const rankInfo = calculateRealisticRank(selectedDept, scores.total);
+            
+            // 합격 구분 결정
+            let passType = '불합격';
+            if (isPass) {
+                if (rankInfo.rank <= deptData.quota * 0.9) {
+                    passType = '정시합격';
+                } else if (rankInfo.rank <= deptData.quota) {
+                    passType = '추가합격 1차';
+                } else {
+                    passType = '추가합격 2차';
+                }
+            }
+            
+            return {
+                department: selectedDept,
+                admissionType: `정시 ${deptData.group}`,
+                passType: passType,
+                isPass: isPass,
+                scores: scores,
+                rank: rankInfo,
+                quota: deptData.quota,
+                competitionRate: deptData.competitionRate
+            };
+        }
+
+        // 실제 성명 생성
+        function generateRealisticName() {
+            const surname = koreanSurnames[Math.floor(Math.random() * koreanSurnames.length)];
+            const isMale = Math.random() < 0.5;
+            const givenNameList = koreanGivenNames[isMale ? 0 : 1];
+            const givenName = givenNameList[Math.floor(Math.random() * givenNameList.length)];
+            return surname + givenName;
+        }
+
+
+
+        // 불합격 체험 함수 (합격 결과에서 호출)
+        function showFailureExperience() {
+            // 현재 표시된 이름과 수험번호 가져오기
+            const currentName = document.getElementById('display-name').textContent;
+            const currentExamNumber = document.getElementById('display-exam-number-result').textContent;
+            
+            // 불합격 정보 생성
+            const admissionInfo = generateRealisticAdmissionInfo(currentName, currentExamNumber);
+            admissionInfo.isPass = false; // 강제 불합격
+            admissionInfo.passType = '불합격';
+            
+            // 불합격자 점수로 재계산
+            const scores = calculateRealisticScore(admissionInfo.department, false);
+            admissionInfo.scores = scores;
+            const rankInfo = calculateRealisticRank(admissionInfo.department, scores.total);
+            admissionInfo.rank = rankInfo;
+            
+            // 불합격 결과 표시
+            displayResult(currentName, currentExamNumber, admissionInfo);
+            
+            // 불합격 체험 섹션 숨기기
+            document.getElementById('failure-experience-section').style.display = 'none';
+        }
+
+        // 결과 표시 공통 함수
+        function displayResult(name, examNumber, admissionInfo) {
+            // 결과 표시
+            document.getElementById('display-name').textContent = name;
+            document.getElementById('display-exam-number-result').textContent = examNumber;
+            document.getElementById('display-department').textContent = admissionInfo.department;
+            document.getElementById('display-admission-type').textContent = admissionInfo.admissionType;
+            document.getElementById('display-pass-type').textContent = admissionInfo.passType;
+            document.getElementById('display-quota').textContent = admissionInfo.quota + '명';
+            document.getElementById('display-competition-rate').textContent = admissionInfo.competitionRate + ':1';
+            document.getElementById('display-total-score').textContent = admissionInfo.scores.total + '점';
+            document.getElementById('display-korean-score').textContent = admissionInfo.scores.korean + '점';
+            document.getElementById('display-math-score').textContent = admissionInfo.scores.math + '점';
+            document.getElementById('display-english-score').textContent = admissionInfo.scores.english + '점';
+            document.getElementById('display-science1-score').textContent = admissionInfo.scores.science1 + '점';
+            document.getElementById('display-science2-score').textContent = admissionInfo.scores.science2 + '점';
+            document.getElementById('display-rank').textContent = admissionInfo.rank.rank + ' / ' + admissionInfo.rank.total + '명';
+            
+            // 합격/불합격에 따른 UI 변경
+            const passStatusElement = document.getElementById('display-pass-status');
+            const congratsElement = document.getElementById('congratulations-message');
+            const failureElement = document.getElementById('failure-message');
+            
+            const failureExperienceSection = document.getElementById('failure-experience-section');
+            
+            if (admissionInfo.isPass) {
+                passStatusElement.textContent = '합격';
+                passStatusElement.className = 'value-cell pass-cell';
+                passStatusElement.style.color = '#28a745';
+                congratsElement.style.display = 'block';
+                failureElement.style.display = 'none';
+                failureExperienceSection.style.display = 'block'; // 합격 시 불합격 체험 섹션 보이기
+            } else {
+                passStatusElement.textContent = '불합격';
+                passStatusElement.className = 'value-cell fail-cell';
+                passStatusElement.style.color = '#dc3545';
+                congratsElement.style.display = 'none';
+                failureElement.style.display = 'block';
+                failureExperienceSection.style.display = 'none'; // 불합격 시 불합격 체험 섹션 숨기기
+            }
+            
+            document.getElementById('search-form-container').style.display = 'none';
+            document.getElementById('result-container').style.display = 'block';
+        }
+
+        // 합격자 조회 폼 처리
+        document.getElementById('admission-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const name = document.getElementById('student-name').value.trim();
+            const examNumber = document.getElementById('student-exam-number').value.trim();
+            
+            // 기존 오류 메시지 제거
+            const existingError = document.querySelector('.error-message');
+            if (existingError) {
+                existingError.remove();
+            }
+            
+            // 입력 검증
+            if (!name || !examNumber) {
+                const errorDiv = document.createElement('div');
+                errorDiv.className = 'error-message';
+                errorDiv.textContent = '성명과 수험번호를 모두 입력해주세요.';
+                
+                const form = document.getElementById('admission-form');
+                form.parentNode.insertBefore(errorDiv, form);
+                return;
+            }
+            
+            // 수험번호 형식 검증 (13자리 숫자)
+            if (!/^\d{13}$/.test(examNumber)) {
+                const errorDiv = document.createElement('div');
+                errorDiv.className = 'error-message';
+                errorDiv.textContent = '수험번호는 13자리 숫자로 입력해주세요. (예: 2026110010001)';
+                
+                const form = document.getElementById('admission-form');
+                form.parentNode.insertBefore(errorDiv, form);
+                return;
+            }
+            
+            // 성명 검증 (한글 2-4자)
+            if (!/^[가-힣]{2,4}$/.test(name)) {
+                const errorDiv = document.createElement('div');
+                errorDiv.className = 'error-message';
+                errorDiv.textContent = '성명은 한글 2-4자로 입력해주세요.';
+                
+                const form = document.getElementById('admission-form');
+                form.parentNode.insertBefore(errorDiv, form);
+                return;
+            }
+            
+            // 무조건 합격자 정보 생성
+            const admissionInfo = generateRealisticAdmissionInfo(name, examNumber);
+            // 강제로 합격 처리
+            admissionInfo.isPass = true;
+            admissionInfo.passType = '정시합격';
+            
+            // 합격자 점수로 재계산
+            const scores = calculateRealisticScore(admissionInfo.department, true);
+            admissionInfo.scores = scores;
+            const rankInfo = calculateRealisticRank(admissionInfo.department, scores.total);
+            admissionInfo.rank = rankInfo;
+            
+            // 공통 결과 표시 함수 사용
+            displayResult(name, examNumber, admissionInfo);
+        });
+
+
+
+        // 설정 변경 처리
+        async function onConfigChange(config) {
+            const universityName = config.university_name || defaultConfig.university_name;
+            document.getElementById('university-name').textContent = universityName;
+        }
+
+        // 서울대 통합검색 기능 - 실제 작동
+        function performSNUSearch() {
+            const searchTerm = document.getElementById('snu-search-input').value.trim();
+            if (searchTerm) {
+                // 서울대 통합검색 페이지로 이동
+                const searchUrl = `https://www.snu.ac.kr/search?query=${encodeURIComponent(searchTerm)}`;
+                window.open(searchUrl, '_blank', 'noopener,noreferrer');
+            }
+        }
+
+        // 서울대 검색 Enter 키 이벤트
+        document.addEventListener('DOMContentLoaded', function() {
+            const snuSearchInput = document.getElementById('snu-search-input');
+            if (snuSearchInput) {
+                snuSearchInput.addEventListener('keypress', function(e) {
+                    if (e.key === 'Enter') {
+                        performSNUSearch();
+                    }
+                });
+            }
+        });
+
+        // 네비게이션 메뉴 함수들 - 실제 페이지 내 콘텐츠 변경
+        function showUniversityInfo() {
+            updateActiveNav('대학소개');
+            showSNUContent('대학소개', `
+                <div class="content-section">
+                    <h3>🏛️ 서울대학교 소개</h3>
+                    <div class="info-table modern">
+                        <table>
+                            <tr>
+                                <td class="info-label">설립년도</td>
+                                <td>1946년</td>
+                            </tr>
+                            <tr>
+                                <td class="info-label">총장</td>
+                                <td>유홍림</td>
+                            </tr>
+                            <tr>
+                                <td class="info-label">학생수</td>
+                                <td>학부 16,892명, 대학원 11,394명</td>
+                            </tr>
+                            <tr>
+                                <td class="info-label">교직원수</td>
+                                <td>교수 2,064명, 직원 3,128명</td>
+                            </tr>
+                            <tr>
+                                <td class="info-label">캠퍼스</td>
+                                <td>관악캠퍼스, 연건캠퍼스, 평창캠퍼스</td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+                <div class="content-section">
+                    <h3>🎯 교육목표</h3>
+                    <ul style="line-height: 1.8; color: #495057;">
+                        <li>진리탐구와 학문발전에 기여하는 창의적 인재 양성</li>
+                        <li>국가와 인류사회 발전에 기여하는 지도자 양성</li>
+                        <li>자유로운 학문연구와 창의적 교육의 실현</li>
+                        <li>국제적 수준의 교육과 연구 환경 조성</li>
+                    </ul>
+                </div>
+            `);
+        }
+
+        function showAdmissionInfo() {
+            updateActiveNav('입학안내');
+            showSNUContent('입학안내', `
+                <div class="content-section">
+                    <h3>📋 2026학년도 입학전형</h3>
+                    <div class="info-table modern">
+                        <table>
+                            <tr>
+                                <td class="info-label">수시모집</td>
+                                <td>일반전형, 지역균형선발전형, 기회균형선발특별전형</td>
+                            </tr>
+                            <tr>
+                                <td class="info-label">정시모집</td>
+                                <td>가군, 나군, 다군</td>
+                            </tr>
+                            <tr>
+                                <td class="info-label">총 모집인원</td>
+                                <td>3,233명</td>
+                            </tr>
+                            <tr>
+                                <td class="info-label">원서접수</td>
+                                <td>2024.12.19(목) ~ 12.23(월)</td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+                <div class="quick-actions">
+                    <div class="action-card primary" onclick="goToAdmissionResult()">
+                        <div class="card-icon">🎓</div>
+                        <h3>합격자 조회</h3>
+                        <p>수험번호와 성명으로<br>합격 여부를 확인하세요</p>
+                        <div class="card-arrow">→</div>
+                    </div>
+                    <div class="action-card" onclick="showRegistrationInfo()">
+                        <div class="card-icon">📋</div>
+                        <h3>등록안내</h3>
+                        <p>합격자 등록 절차 및<br>필요서류를 확인하세요</p>
+                        <div class="card-arrow">→</div>
+                    </div>
+                </div>
+            `);
+        }
+
+        function showAcademicInfo() {
+            updateActiveNav('학사정보');
+            showSNUContent('학사정보', `
+                <div class="content-section">
+                    <h3>📚 학사제도</h3>
+                    <div class="info-table modern">
+                        <table>
+                            <tr>
+                                <td class="info-label">학기제</td>
+                                <td>2학기제 (봄학기, 가을학기)</td>
+                            </tr>
+                            <tr>
+                                <td class="info-label">졸업학점</td>
+                                <td>130학점 이상</td>
+                            </tr>
+                            <tr>
+                                <td class="info-label">성적평가</td>
+                                <td>A+, A, B+, B, C+, C, D+, D, F</td>
+                            </tr>
+                            <tr>
+                                <td class="info-label">복수전공</td>
+                                <td>가능 (36학점 이상)</td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+                <div class="content-section">
+                    <h3>🏫 단과대학</h3>
+                    <div class="contact-grid">
+                        <div class="contact-card">
+                            <h4>인문대학</h4>
+                            <p>국어국문학과, 중어중문학과, 영어영문학과, 불어불문학과, 독어독문학과, 노어노문학과, 서어서문학과, 언어학과, 국사학과, 동양사학과, 서양사학과, 고고미술사학과, 철학과, 종교학과</p>
+                        </div>
+                        <div class="contact-card">
+                            <h4>사회과학대학</h4>
+                            <p>정치외교학부, 경제학부, 사회학과, 인류학과, 심리학과, 지리학과, 사회복지학과, 언론정보학과</p>
+                        </div>
+                        <div class="contact-card">
+                            <h4>자연과학대학</h4>
+                            <p>수학과, 통계학과, 물리천문학부, 화학부, 생명과학부, 지구환경과학부</p>
+                        </div>
+                    </div>
+                </div>
+            `);
+        }
+
+        function showResearchInfo() {
+            updateActiveNav('연구');
+            showSNUContent('연구', `
+                <div class="content-section">
+                    <h3>🔬 연구현황</h3>
+                    <div class="info-table modern">
+                        <table>
+                            <tr>
+                                <td class="info-label">연구비</td>
+                                <td>연간 약 6,000억원</td>
+                            </tr>
+                            <tr>
+                                <td class="info-label">논문발표</td>
+                                <td>연간 약 12,000편</td>
+                            </tr>
+                            <tr>
+                                <td class="info-label">특허출원</td>
+                                <td>연간 약 800건</td>
+                            </tr>
+                            <tr>
+                                <td class="info-label">기술이전</td>
+                                <td>연간 약 200건</td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+                <div class="content-section">
+                    <h3>🏆 주요 연구성과</h3>
+                    <ul style="line-height: 1.8; color: #495057;">
+                        <li>AI 반도체 기술 개발로 세계 최고 수준 달성</li>
+                        <li>코로나19 치료제 개발 연구 선도</li>
+                        <li>양자컴퓨터 핵심기술 개발</li>
+                        <li>친환경 에너지 기술 혁신</li>
+                        <li>바이오헬스케어 분야 글로벌 리더십</li>
+                    </ul>
+                </div>
+            `);
+        }
+
+        function showInternationalInfo() {
+            updateActiveNav('국제교류');
+            showSNUContent('국제교류', `
+                <div class="content-section">
+                    <h3>🌍 국제교류 현황</h3>
+                    <div class="info-table modern">
+                        <table>
+                            <tr>
+                                <td class="info-label">교환협정대학</td>
+                                <td>전세계 800여개 대학</td>
+                            </tr>
+                            <tr>
+                                <td class="info-label">외국인 학생</td>
+                                <td>약 4,500명</td>
+                            </tr>
+                            <tr>
+                                <td class="info-label">교환학생 파견</td>
+                                <td>연간 약 1,200명</td>
+                            </tr>
+                            <tr>
+                                <td class="info-label">영어강의</td>
+                                <td>전체 강의의 30% 이상</td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+                <div class="content-section">
+                    <h3>✈️ 주요 프로그램</h3>
+                    <div class="contact-grid">
+                        <div class="contact-card">
+                            <h4>교환학생</h4>
+                            <p>1-2학기 해외대학 수학<br>학점인정 및 등록금 면제</p>
+                        </div>
+                        <div class="contact-card">
+                            <h4>복수학위</h4>
+                            <p>해외대학과 공동학위<br>양교 학위 동시 취득</p>
+                        </div>
+                        <div class="contact-card">
+                            <h4>단기연수</h4>
+                            <p>방학 중 해외연수<br>어학 및 문화체험</p>
+                        </div>
+                    </div>
+                </div>
+            `);
+        }
+
+        function showCampusInfo() {
+            updateActiveNav('캠퍼스생활');
+            showSNUContent('캠퍼스생활', `
+                <div class="content-section">
+                    <h3>🏠 생활관 안내</h3>
+                    <div class="info-table modern">
+                        <table>
+                            <tr>
+                                <td class="info-label">수용인원</td>
+                                <td>약 6,000명</td>
+                            </tr>
+                            <tr>
+                                <td class="info-label">생활관비</td>
+                                <td>학기당 80만원~120만원</td>
+                            </tr>
+                            <tr>
+                                <td class="info-label">식사비</td>
+                                <td>월 약 25만원</td>
+                            </tr>
+                            <tr>
+                                <td class="info-label">신청방법</td>
+                                <td>온라인 신청 (선착순)</td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+                <div class="content-section">
+                    <h3>🎭 동아리 활동</h3>
+                    <div class="contact-grid">
+                        <div class="contact-card">
+                            <h4>학술분과</h4>
+                            <p>약 150개 동아리<br>전공별 학술연구</p>
+                        </div>
+                        <div class="contact-card">
+                            <h4>문화예술분과</h4>
+                            <p>약 80개 동아리<br>음악, 미술, 연극 등</p>
+                        </div>
+                        <div class="contact-card">
+                            <h4>체육분과</h4>
+                            <p>약 60개 동아리<br>각종 스포츠 활동</p>
+                        </div>
+                    </div>
+                </div>
+            `);
+        }
+
+        function showGraduateInfo() {
+            updateActiveNav('대학원');
+            showSNUContent('대학원', `
+                <div class="content-section">
+                    <h3>🎓 대학원 과정</h3>
+                    <div class="info-table modern">
+                        <table>
+                            <tr>
+                                <td class="info-label">석사과정</td>
+                                <td>2년 과정, 24학점 이상</td>
+                            </tr>
+                            <tr>
+                                <td class="info-label">박사과정</td>
+                                <td>3년 과정, 36학점 이상</td>
+                            </tr>
+                            <tr>
+                                <td class="info-label">통합과정</td>
+                                <td>5년 과정, 60학점 이상</td>
+                            </tr>
+                            <tr>
+                                <td class="info-label">전문대학원</td>
+                                <td>의학, 치의학, 수의학, 법학 등</td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+                <div class="content-section">
+                    <h3>💰 장학제도</h3>
+                    <ul style="line-height: 1.8; color: #495057;">
+                        <li>연구조교 장학금: 등록금 전액 + 생활비</li>
+                        <li>교육조교 장학금: 등록금 일부 + 수당</li>
+                        <li>우수학생 장학금: 성적 우수자 대상</li>
+                        <li>국가장학금: 소득분위별 차등 지급</li>
+                    </ul>
+                </div>
+            `);
+        }
+
+        function showIndustryInfo() {
+            updateActiveNav('산학협력');
+            showSNUContent('산학협력', `
+                <div class="content-section">
+                    <h3>🤝 산학협력 현황</h3>
+                    <div class="info-table modern">
+                        <table>
+                            <tr>
+                                <td class="info-label">협력기업</td>
+                                <td>국내외 2,000여개 기업</td>
+                            </tr>
+                            <tr>
+                                <td class="info-label">기술이전 수입</td>
+                                <td>연간 약 200억원</td>
+                            </tr>
+                            <tr>
+                                <td class="info-label">창업기업</td>
+                                <td>연간 약 100개 기업</td>
+                            </tr>
+                            <tr>
+                                <td class="info-label">인턴십</td>
+                                <td>연간 약 3,000명 참여</td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+                <div class="content-section">
+                    <h3>🚀 창업지원</h3>
+                    <div class="contact-grid">
+                        <div class="contact-card">
+                            <h4>창업보육센터</h4>
+                            <p>사업화 지원<br>멘토링 및 투자유치</p>
+                        </div>
+                        <div class="contact-card">
+                            <h4>기술지주회사</h4>
+                            <p>기술사업화<br>자회사 설립 지원</p>
+                        </div>
+                        <div class="contact-card">
+                            <h4>창업교육</h4>
+                            <p>창업강좌 운영<br>실무형 창업교육</p>
+                        </div>
+                    </div>
+                </div>
+            `);
+        }
+
+        // 사이드바 메뉴 함수들 - 실제 콘텐츠 변경
+        function showRecruitmentInfo() {
+            showSNUContent('모집요강', `
+                <div class="content-section">
+                    <h3>📋 2026학년도 정시모집 요강</h3>
+                    <div class="info-table modern">
+                        <table>
+                            <tr>
+                                <td class="info-label">모집인원</td>
+                                <td>가군 1,082명, 나군 1,589명, 다군 562명</td>
+                            </tr>
+                            <tr>
+                                <td class="info-label">지원자격</td>
+                                <td>고등학교 졸업(예정)자 또는 동등학력 인정자</td>
+                            </tr>
+                            <tr>
+                                <td class="info-label">전형요소</td>
+                                <td>수능 100% (일부 학과 면접 추가)</td>
+                            </tr>
+                            <tr>
+                                <td class="info-label">수능 반영영역</td>
+                                <td>국어, 수학, 영어, 탐구 2과목</td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+                <div class="content-section">
+                    <h3>📅 주요 일정</h3>
+                    <div class="info-table modern">
+                        <table>
+                            <tr>
+                                <td class="info-label">원서접수</td>
+                                <td>2024.12.19(목) 09:00 ~ 12.23(월) 18:00</td>
+                            </tr>
+                            <tr>
+                                <td class="info-label">서류제출</td>
+                                <td>2024.12.24(화) 17:00까지</td>
+                            </tr>
+                            <tr>
+                                <td class="info-label">합격자발표</td>
+                                <td>2024.12.28(토) 14:00</td>
+                            </tr>
+                            <tr>
+                                <td class="info-label">등록기간</td>
+                                <td>2024.12.30(월) ~ 2025.01.03(금)</td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+            `);
+        }
+
+        function showRegistrationInfo() {
+            showSNUContent('등록안내', `
+                <div class="content-section">
+                    <h3>📋 등록 절차</h3>
+                    <div class="notice-box important">
+                        <ul class="notice-list enhanced">
+                            <li><strong>1단계:</strong> 온라인 등록의사 표시 (필수)</li>
+                            <li><strong>2단계:</strong> 등록금 납부 (가상계좌 이체)</li>
+                            <li><strong>3단계:</strong> 서류 제출 (우편 또는 방문)</li>
+                            <li><strong>4단계:</strong> 등록 완료 확인</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="content-section">
+                    <h3>💰 등록금 안내</h3>
+                    <div class="info-table modern">
+                        <table>
+                            <tr>
+                                <td class="info-label">인문사회계열</td>
+                                <td>4,219,000원</td>
+                            </tr>
+                            <tr>
+                                <td class="info-label">자연과학계열</td>
+                                <td>5,066,000원</td>
+                            </tr>
+                            <tr>
+                                <td class="info-label">공학계열</td>
+                                <td>5,395,000원</td>
+                            </tr>
+                            <tr>
+                                <td class="info-label">의학계열</td>
+                                <td>7,426,000원</td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+            `);
+        }
+
+        function showScheduleInfo() {
+            showSNUContent('전형일정', `
+                <div class="content-section">
+                    <h3>📅 2026학년도 입학전형 일정</h3>
+                    <div class="info-table modern">
+                        <table>
+                            <tr>
+                                <td class="info-label">수시모집</td>
+                                <td>2024.09.09 ~ 09.13</td>
+                            </tr>
+                            <tr>
+                                <td class="info-label">수시 합격자발표</td>
+                                <td>2024.12.15</td>
+                            </tr>
+                            <tr>
+                                <td class="info-label">정시모집</td>
+                                <td>2024.12.19 ~ 12.23</td>
+                            </tr>
+                            <tr>
+                                <td class="info-label">정시 합격자발표</td>
+                                <td>2024.12.28</td>
+                            </tr>
+                            <tr>
+                                <td class="info-label">등록기간</td>
+                                <td>2024.12.30 ~ 2025.01.03</td>
+                            </tr>
+                            <tr>
+                                <td class="info-label">추가모집</td>
+                                <td>2025.02.17 ~ 02.18</td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+            `);
+        }
+
+        function showCounselingInfo() {
+            showSNUContent('입학상담', `
+                <div class="content-section">
+                    <h3>📞 입학상담 안내</h3>
+                    <div class="contact-grid">
+                        <div class="contact-card">
+                            <h4>📞 전화상담</h4>
+                            <p><strong>02-880-6971~6977</strong></p>
+                            <p>평일 09:00~18:00<br>토요일 09:00~13:00</p>
+                        </div>
+                        <div class="contact-card">
+                            <h4>✉️ 이메일 상담</h4>
+                            <p><strong>snuadmit@snu.ac.kr</strong></p>
+                            <p>24시간 접수<br>2일 내 답변</p>
+                        </div>
+                        <div class="contact-card">
+                            <h4>🏢 방문상담</h4>
+                            <p><strong>입학본부 1층</strong></p>
+                            <p>평일 09:00~17:00<br>점심시간 12:00~13:00</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="content-section">
+                    <h3>❓ 자주 묻는 질문</h3>
+                    <div style="background: #f8f9fa; padding: 20px; border-radius: 8px;">
+                        <details style="margin-bottom: 15px;">
+                            <summary style="font-weight: 600; cursor: pointer; padding: 10px; background: white; border-radius: 4px;">Q. 정시모집에서 복수지원이 가능한가요?</summary>
+                            <p style="padding: 15px; margin: 0; line-height: 1.6;">A. 가군, 나군, 다군 각각 1개씩 총 3개까지 지원 가능합니다.</p>
+                        </details>
+                        <details style="margin-bottom: 15px;">
+                            <summary style="font-weight: 600; cursor: pointer; padding: 10px; background: white; border-radius: 4px;">Q. 수능 최저학력기준이 있나요?</summary>
+                            <p style="padding: 15px; margin: 0; line-height: 1.6;">A. 정시모집에는 별도의 최저학력기준이 없습니다.</p>
+                        </details>
+                        <details>
+                            <summary style="font-weight: 600; cursor: pointer; padding: 10px; background: white; border-radius: 4px;">Q. 면접이 있는 학과는 어디인가요?</summary>
+                            <p style="padding: 15px; margin: 0; line-height: 1.6;">A. 의예과, 치의학과, 수의예과에서 면접을 실시합니다.</p>
+                        </details>
+                    </div>
+                </div>
+            `);
+        }
+
+        function showFAQInfo() {
+            showSNUContent('FAQ', `
+                <div class="content-section">
+                    <h3>❓ 자주 묻는 질문</h3>
+                    <div style="background: #f8f9fa; padding: 20px; border-radius: 8px;">
+                        <details style="margin-bottom: 20px;">
+                            <summary style="font-weight: 600; cursor: pointer; padding: 15px; background: white; border-radius: 4px; border-left: 4px solid #003366;">Q. 정시모집 지원 시 주의사항은?</summary>
+                            <div style="padding: 20px; margin: 0; line-height: 1.6; background: white; margin-top: 5px; border-radius: 4px;">
+                                <p><strong>A.</strong> 다음 사항을 반드시 확인하세요:</p>
+                                <ul>
+                                    <li>수능 응시영역이 지원학과 요구사항과 일치하는지 확인</li>
+                                    <li>가군, 나군, 다군별로 1개씩만 지원 가능</li>
+                                    <li>원서접수 마감일시 엄수 (12.23 18:00)</li>
+                                    <li>서류제출 기한 준수 (12.24 17:00)</li>
+                                </ul>
+                            </div>
+                        </details>
+                        
+                        <details style="margin-bottom: 20px;">
+                            <summary style="font-weight: 600; cursor: pointer; padding: 15px; background: white; border-radius: 4px; border-left: 4px solid #003366;">Q. 합격 후 등록하지 않으면 어떻게 되나요?</summary>
+                            <div style="padding: 20px; margin: 0; line-height: 1.6; background: white; margin-top: 5px; border-radius: 4px;">
+                                <p><strong>A.</strong> 등록기간 내 미등록 시 합격이 자동 취소되며, 추가합격자에게 기회가 주어집니다.</p>
+                            </div>
+                        </details>
+                        
+                        <details style="margin-bottom: 20px;">
+                            <summary style="font-weight: 600; cursor: pointer; padding: 15px; background: white; border-radius: 4px; border-left: 4px solid #003366;">Q. 장학금 제도는 어떻게 되나요?</summary>
+                            <div style="padding: 20px; margin: 0; line-height: 1.6; background: white; margin-top: 5px; border-radius: 4px;">
+                                <p><strong>A.</strong> 다양한 장학금이 있습니다:</p>
+                                <ul>
+                                    <li>관악사 장학금: 성적 우수자 대상</li>
+                                    <li>국가장학금: 소득분위별 차등 지급</li>
+                                    <li>교내 근로장학금: 근로를 통한 장학금</li>
+                                    <li>외부 장학금: 각종 재단 및 기업 장학금</li>
+                                </ul>
+                            </div>
+                        </details>
+                        
+                        <details style="margin-bottom: 20px;">
+                            <summary style="font-weight: 600; cursor: pointer; padding: 15px; background: white; border-radius: 4px; border-left: 4px solid #003366;">Q. 기숙사 신청은 언제 하나요?</summary>
+                            <div style="padding: 20px; margin: 0; line-height: 1.6; background: white; margin-top: 5px; border-radius: 4px;">
+                                <p><strong>A.</strong> 합격자 발표 후 별도 공지를 통해 신청기간을 안내합니다. 선착순 접수이므로 빠른 신청을 권장합니다.</p>
+                            </div>
+                        </details>
+                        
+                        <details>
+                            <summary style="font-weight: 600; cursor: pointer; padding: 15px; background: white; border-radius: 4px; border-left: 4px solid #003366;">Q. 전과(전부)는 가능한가요?</summary>
+                            <div style="padding: 20px; margin: 0; line-height: 1.6; background: white; margin-top: 5px; border-radius: 4px;">
+                                <p><strong>A.</strong> 2학년 진급 시 전과 신청이 가능합니다. 단, 학과별 정원과 성적 기준이 있으니 자세한 사항은 학사과에 문의하세요.</p>
+                            </div>
+                        </details>
+                    </div>
+                </div>
+            `);
+        }
+
+        function showPastExamsInfo() {
+            showSNUContent('기출문제', `
+                <div class="content-section">
+                    <h3>📝 기출문제 안내</h3>
+                    <div class="notice-box important">
+                        <p style="text-align: center; font-size: 16px; font-weight: 600; margin: 0;">
+                            ⚠️ 정시모집은 수능 100% 반영으로 별도 시험이 없습니다
+                        </p>
+                    </div>
+                </div>
+                <div class="content-section">
+                    <h3>📚 수시모집 기출문제</h3>
+                    <div class="contact-grid">
+                        <div class="contact-card">
+                            <h4>📄 논술전형</h4>
+                            <p>인문계열, 자연계열<br>최근 3개년 기출문제</p>
+                            <button onclick="downloadPastExam('논술')" style="background: #003366; color: white; border: none; padding: 8px 16px; border-radius: 4px; cursor: pointer; margin-top: 10px;">다운로드</button>
+                        </div>
+                        <div class="contact-card">
+                            <h4>🗣️ 면접전형</h4>
+                            <p>의예과, 치의학과<br>면접 기출문제</p>
+                            <button onclick="downloadPastExam('면접')" style="background: #003366; color: white; border: none; padding: 8px 16px; border-radius: 4px; cursor: pointer; margin-top: 10px;">다운로드</button>
+                        </div>
+                        <div class="contact-card">
+                            <h4>📊 구술고사</h4>
+                            <p>자연계열 일부학과<br>구술고사 기출문제</p>
+                            <button onclick="downloadPastExam('구술')" style="background: #003366; color: white; border: none; padding: 8px 16px; border-radius: 4px; cursor: pointer; margin-top: 10px;">다운로드</button>
+                        </div>
+                    </div>
+                </div>
+            `);
+        }
+
+        function showStatisticsInfo() {
+            showSNUContent('통계자료', `
+                <div class="content-section">
+                    <h3>📊 2025학년도 정시모집 통계</h3>
+                    <div class="info-table modern">
+                        <table>
+                            <tr>
+                                <td class="info-label">전체 경쟁률</td>
+                                <td>8.8:1</td>
+                            </tr>
+                            <tr>
+                                <td class="info-label">가군 경쟁률</td>
+                                <td>7.2:1</td>
+                            </tr>
+                            <tr>
+                                <td class="info-label">나군 경쟁률</td>
+                                <td>9.8:1</td>
+                            </tr>
+                            <tr>
+                                <td class="info-label">다군 경쟁률</td>
+                                <td>6.5:1</td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+                <div class="content-section">
+                    <h3>🏆 주요 학과별 경쟁률</h3>
+                    <div class="info-table modern">
+                        <table>
+                            <tr>
+                                <td class="info-label">의예과</td>
+                                <td>4.8:1 (나군)</td>
+                            </tr>
+                            <tr>
+                                <td class="info-label">경영학과</td>
+                                <td>16.8:1 (나군)</td>
+                            </tr>
+                            <tr>
+                                <td class="info-label">컴퓨터공학부</td>
+                                <td>13.8:1 (나군)</td>
+                            </tr>
+                            <tr>
+                                <td class="info-label">경제학부</td>
+                                <td>12.1:1 (가군)</td>
+                            </tr>
+                            <tr>
+                                <td class="info-label">기계공학부</td>
+                                <td>10.1:1 (나군)</td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+                <div class="content-section">
+                    <h3>📈 최근 3년간 경쟁률 추이</h3>
+                    <div style="background: #f8f9fa; padding: 20px; border-radius: 8px; text-align: center;">
+                        <div style="display: flex; justify-content: space-around; margin-bottom: 20px;">
+                            <div>
+                                <div style="font-size: 24px; font-weight: 700; color: #003366;">9.2:1</div>
+                                <div style="font-size: 14px; color: #666;">2023학년도</div>
+                            </div>
+                            <div>
+                                <div style="font-size: 24px; font-weight: 700; color: #003366;">8.9:1</div>
+                                <div style="font-size: 14px; color: #666;">2024학년도</div>
+                            </div>
+                            <div>
+                                <div style="font-size: 24px; font-weight: 700; color: #003366;">8.8:1</div>
+                                <div style="font-size: 14px; color: #666;">2025학년도</div>
+                            </div>
+                        </div>
+                        <p style="color: #666; font-size: 14px; margin: 0;">전체적으로 안정적인 경쟁률을 유지하고 있습니다.</p>
+                    </div>
+                </div>
+            `);
+        }
+
+        // 네비게이션 활성화 상태 업데이트
+        function updateActiveNav(activeItem) {
+            const navItems = document.querySelectorAll('.snu-nav-item');
+            navItems.forEach(item => {
+                item.classList.remove('active');
+                if (item.textContent === activeItem) {
+                    item.classList.add('active');
+                }
+            });
+        }
+
+        // 서울대 콘텐츠 변경 함수
+        function showSNUContent(title, content) {
+            // 브레드크럼 업데이트
+            const breadcrumb = document.querySelector('.snu-breadcrumb');
+            if (breadcrumb) {
+                breadcrumb.textContent = `홈 > ${title}`;
+            }
+
+            // 메인 콘텐츠 영역 업데이트
+            const mainArea = document.querySelector('.snu-main-area');
+            if (mainArea) {
+                mainArea.innerHTML = content;
+            }
+
+            // 사이드바 활성화 상태 업데이트
+            const sidebarItems = document.querySelectorAll('.sidebar-menu a');
+            sidebarItems.forEach(item => {
+                item.classList.remove('active');
+                if (item.textContent === title) {
+                    item.classList.add('active');
+                }
+            });
+        }
+
+        // 기출문제 다운로드 함수
+        function downloadPastExam(examType) {
+            // 실제 PDF 파일 생성 및 다운로드
+            const fileName = `서울대학교_${examType}_기출문제_2022-2024.pdf`;
+            
+            // PDF 내용 생성 (실제 PDF 바이너리 데이터 시뮬레이션)
+            const pdfContent = generatePDFContent(examType);
+            
+            // Blob 생성
+            const blob = new Blob([pdfContent], { type: 'application/pdf' });
+            
+            // 다운로드 링크 생성
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.style.display = 'none';
+            a.href = url;
+            a.download = fileName;
+            
+            // 다운로드 실행
+            document.body.appendChild(a);
+            a.click();
+            
+            // 정리
+            window.URL.revokeObjectURL(url);
+            document.body.removeChild(a);
+            
+            // 사용자에게 알림
+            showDownloadNotification(examType, fileName);
+        }
+
+        // PDF 내용 생성 함수
+        function generatePDFContent(examType) {
+            // 실제 PDF 헤더와 기본 구조
+            const pdfHeader = '%PDF-1.4\n';
+            const pdfContent = `
+1 0 obj
+<<
+/Type /Catalog
+/Pages 2 0 R
+>>
+endobj
+
+2 0 obj
+<<
+/Type /Pages
+/Kids [3 0 R]
+/Count 1
+>>
+endobj
+
+3 0 obj
+<<
+/Type /Page
+/Parent 2 0 R
+/MediaBox [0 0 612 792]
+/Contents 4 0 R
+/Resources <<
+/Font <<
+/F1 5 0 R
+>>
+>>
+>>
+endobj
+
+4 0 obj
+<<
+/Length 200
+>>
+stream
+BT
+/F1 12 Tf
+50 750 Td
+(서울대학교 ${examType} 기출문제) Tj
+0 -20 Td
+(2022-2024학년도) Tj
+0 -40 Td
+(이 파일은 데모용 샘플입니다.) Tj
+0 -20 Td
+(실제 기출문제는 서울대학교 입학본부에서) Tj
+0 -20 Td
+(공식적으로 제공하는 자료를 참고하세요.) Tj
+ET
+endstream
+endobj
+
+5 0 obj
+<<
+/Type /Font
+/Subtype /Type1
+/BaseFont /Helvetica
+>>
+endobj
+
+xref
+0 6
+0000000000 65535 f 
+0000000010 00000 n 
+0000000053 00000 n 
+0000000110 00000 n 
+0000000251 00000 n 
+0000000504 00000 n 
+trailer
+<<
+/Size 6
+/Root 1 0 R
+>>
+startxref
+565
+%%EOF`;
+            
+            return pdfHeader + pdfContent;
+        }
+
+        // 다운로드 알림 함수
+        function showDownloadNotification(examType, fileName) {
+            // 알림 요소 생성
+            const notification = document.createElement('div');
+            notification.style.cssText = `
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                background: #28a745;
+                color: white;
+                padding: 15px 20px;
+                border-radius: 8px;
+                box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+                z-index: 10001;
+                font-size: 14px;
+                max-width: 300px;
+                animation: slideIn 0.3s ease-out;
+            `;
+            
+            notification.innerHTML = `
+                <div style="display: flex; align-items: center; gap: 10px;">
+                    <div style="font-size: 20px;">📥</div>
+                    <div>
+                        <div style="font-weight: 600; margin-bottom: 5px;">다운로드 완료!</div>
+                        <div style="font-size: 12px; opacity: 0.9;">${fileName}</div>
+                    </div>
+                </div>
+            `;
+            
+            // CSS 애니메이션 추가
+            if (!document.getElementById('notification-styles')) {
+                const style = document.createElement('style');
+                style.id = 'notification-styles';
+                style.textContent = `
+                    @keyframes slideIn {
+                        from {
+                            transform: translateX(100%);
+                            opacity: 0;
+                        }
+                        to {
+                            transform: translateX(0);
+                            opacity: 1;
+                        }
+                    }
+                    @keyframes slideOut {
+                        from {
+                            transform: translateX(0);
+                            opacity: 1;
+                        }
+                        to {
+                            transform: translateX(100%);
+                            opacity: 0;
+                        }
+                    }
+                `;
+                document.head.appendChild(style);
+            }
+            
+            document.body.appendChild(notification);
+            
+            // 3초 후 자동 제거
+            setTimeout(() => {
+                notification.style.animation = 'slideOut 0.3s ease-in';
+                setTimeout(() => {
+                    if (notification.parentNode) {
+                        notification.parentNode.removeChild(notification);
+                    }
+                }, 300);
+            }, 3000);
+        }
+
+        // Google 앱 메뉴 기능 - 실제 작동
+        document.addEventListener('DOMContentLoaded', function() {
+            const appsBtn = document.querySelector('.google-apps-btn');
+            if (appsBtn) {
+                appsBtn.addEventListener('click', function() {
+                    // Google 앱 메뉴 표시
+                    showGoogleAppsMenu();
+                });
+            }
+        });
+
+        // Google 앱 메뉴 표시 함수
+        function showGoogleAppsMenu() {
+            // 기존 메뉴 제거
+            const existingMenu = document.getElementById('google-apps-menu');
+            if (existingMenu) {
+                existingMenu.remove();
+                return;
+            }
+
+            // 앱 메뉴 생성
+            const menu = document.createElement('div');
+            menu.id = 'google-apps-menu';
+            menu.style.cssText = `
+                position: fixed;
+                top: 70px;
+                right: 20px;
+                width: 300px;
+                background: white;
+                border-radius: 8px;
+                box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+                padding: 20px;
+                z-index: 10000;
+                display: grid;
+                grid-template-columns: repeat(3, 1fr);
+                gap: 15px;
+            `;
+
+            const apps = [
+                { name: 'Gmail', url: 'https://mail.google.com', icon: '📧' },
+                { name: 'Drive', url: 'https://drive.google.com', icon: '💾' },
+                { name: 'Photos', url: 'https://photos.google.com', icon: '📷' },
+                { name: 'YouTube', url: 'https://youtube.com', icon: '📺' },
+                { name: 'Maps', url: 'https://maps.google.com', icon: '🗺️' },
+                { name: 'Calendar', url: 'https://calendar.google.com', icon: '📅' },
+                { name: 'Translate', url: 'https://translate.google.com', icon: '🌐' },
+                { name: 'News', url: 'https://news.google.com', icon: '📰' },
+                { name: 'Play', url: 'https://play.google.com', icon: '🎮' }
+            ];
+
+            apps.forEach(app => {
+                const appBtn = document.createElement('div');
+                appBtn.style.cssText = `
+                    display: flex;
+                    flex-direction: column;
+                    align-items: center;
+                    padding: 10px;
+                    border-radius: 8px;
+                    cursor: pointer;
+                    transition: background 0.2s;
+                    text-decoration: none;
+                    color: #202124;
+                `;
+                
+                appBtn.innerHTML = `
+                    <div style="font-size: 24px; margin-bottom: 5px;">${app.icon}</div>
+                    <div style="font-size: 12px; text-align: center;">${app.name}</div>
+                `;
+                
+                appBtn.addEventListener('mouseenter', function() {
+                    this.style.background = '#f1f3f4';
+                });
+                
+                appBtn.addEventListener('mouseleave', function() {
+                    this.style.background = 'transparent';
+                });
+                
+                appBtn.addEventListener('click', function() {
+                    window.open(app.url, '_blank', 'noopener,noreferrer');
+                    menu.remove();
+                });
+                
+                menu.appendChild(appBtn);
+            });
+
+            document.body.appendChild(menu);
+
+            // 메뉴 외부 클릭 시 닫기
+            setTimeout(() => {
+                document.addEventListener('click', function closeMenu(e) {
+                    if (!menu.contains(e.target) && !document.querySelector('.google-apps-btn').contains(e.target)) {
+                        menu.remove();
+                        document.removeEventListener('click', closeMenu);
+                    }
+                });
+            }, 100);
+        }
+
+        // 결과 페이지 네비게이션 기능
+        document.addEventListener('DOMContentLoaded', function() {
+            const resultsNavItems = document.querySelectorAll('.results-nav-item');
+            resultsNavItems.forEach(item => {
+                item.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    
+                    // 활성화 상태 변경
+                    resultsNavItems.forEach(nav => nav.classList.remove('active'));
+                    this.classList.add('active');
+                    
+                    const navText = this.textContent.trim();
+                    showCustomModal(`${navText} 검색`, `${navText} 검색 결과를 표시합니다.\n\n실제 Google에서는 해당 카테고리의 검색 결과가 표시됩니다.`);
+                });
+            });
+        });
+
+        // 언어 변경 기능
+        document.addEventListener('DOMContentLoaded', function() {
+            const langLinks = document.querySelectorAll('.snu-lang a');
+            langLinks.forEach(link => {
+                link.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    
+                    // 활성화 상태 변경
+                    langLinks.forEach(l => l.classList.remove('active'));
+                    this.classList.add('active');
+                    
+                    const lang = this.textContent;
+                    showCustomModal('언어 변경', `${lang}로 언어가 변경되었습니다.\n\n실제 서울대 홈페이지에서는 해당 언어로 페이지가 표시됩니다.`);
+                });
+            });
+        });
+
+        // 상단 메뉴 기능 - 실제 작동
+        document.addEventListener('DOMContentLoaded', function() {
+            const topRightLinks = document.querySelectorAll('.snu-top-right a');
+            topRightLinks.forEach(link => {
+                link.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const linkText = this.textContent;
+                    
+                    if (linkText === '포털시스템') {
+                        window.open('https://portal.snu.ac.kr', '_blank', 'noopener,noreferrer');
+                    } else if (linkText === '웹메일') {
+                        window.open('https://webmail.snu.ac.kr', '_blank', 'noopener,noreferrer');
+                    } else if (linkText === '도서관') {
+                        window.open('https://library.snu.ac.kr', '_blank', 'noopener,noreferrer');
+                    } else if (linkText === '사이트맵') {
+                        window.open('https://www.snu.ac.kr/sitemap', '_blank', 'noopener,noreferrer');
+                    }
+                });
+            });
+        });
+
+        // Google 정보 함수 - 실제 작동
+        function showGoogleInfo(service) {
+            if (service === 'Gmail') {
+                window.open('https://mail.google.com', '_blank', 'noopener,noreferrer');
+            } else if (service === '이미지') {
+                window.open('https://images.google.com', '_blank', 'noopener,noreferrer');
+            } else if (service === '로그인') {
+                window.open('https://accounts.google.com/signin', '_blank', 'noopener,noreferrer');
+            } else if (service === '광고') {
+                window.open('https://ads.google.com', '_blank', 'noopener,noreferrer');
+            } else if (service === '비즈니스') {
+                window.open('https://workspace.google.com', '_blank', 'noopener,noreferrer');
+            } else if (service === '검색의 원리') {
+                window.open('https://www.google.com/search/howsearchworks/', '_blank', 'noopener,noreferrer');
+            } else if (service === '개인정보처리방침') {
+                window.open('https://policies.google.com/privacy', '_blank', 'noopener,noreferrer');
+            } else if (service === '약관') {
+                window.open('https://policies.google.com/terms', '_blank', 'noopener,noreferrer');
+            } else if (service === '설정') {
+                window.open('https://myaccount.google.com', '_blank', 'noopener,noreferrer');
+            }
+        }
+
+        // SDK 초기화
+        if (window.elementSdk) {
+            window.elementSdk.init({
+                defaultConfig: defaultConfig,
+                onConfigChange: onConfigChange,
+                mapToCapabilities: (config) => ({
+                    recolorables: [],
+                    borderables: [],
+                    fontEditable: undefined,
+                    fontSizeable: undefined
+                }),
+                mapToEditPanelValues: (config) => new Map([
+                    ["university_name", config.university_name || defaultConfig.university_name]
+                ])
+            });
+        }
+    </script>
+ <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a1b1253145d3d1da',t:'MTc4NDAzODU4OC4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+ </html>
