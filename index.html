@@ -1,0 +1,199 @@
+<!doctype html>
+<html lang="ko" class="h-full">
+ <head><script>window["__codeletBootstrap__"]=JSON.parse('{"A":"A","B":"20260714-05-1435aa9"}');</script><script src="/_sdk/f432b76fb310b513.telemetry_sdk.js" integrity="sha512-9FJQ55EKmmqhyyik8Bhr[...]
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>안내 페이지</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="/_sdk/8650958800d6c92a.element_sdk.js" integrity="sha512-zFMhEG5W24TdVhhc4yw+K4kKrl6mClLz7Nz7OlZcKY64bZTx26LpVI6mwMCarQMzfrHe8i4fBMu4fxoFej2m9g=="></script>
+  <script src="https://cdn.jsdelivr.net/npm/lucide@0.263.0/dist/umd/lucide.min.js"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700&amp;display=swap" rel="stylesheet">
+  <style>
+    body {
+      box-sizing: border-box;
+    }
+    
+    @keyframes float {
+      0%, 100% { transform: translateY(0px); }
+      50% { transform: translateY(-10px); }
+    }
+    
+    @keyframes pulse-ring {
+      0% { transform: scale(0.8); opacity: 0.8; }
+      50% { transform: scale(1.1); opacity: 0.4; }
+      100% { transform: scale(0.8); opacity: 0.8; }
+    }
+    
+    @keyframes fade-in-up {
+      from {
+        opacity: 0;
+        transform: translateY(30px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+    
+    .animate-float {
+      animation: float 3s ease-in-out infinite;
+    }
+    
+    .animate-pulse-ring {
+      animation: pulse-ring 2s ease-in-out infinite;
+    }
+    
+    .animate-fade-in-up {
+      animation: fade-in-up 0.8s ease-out forwards;
+    }
+    
+    .delay-100 { animation-delay: 0.1s; }
+    .delay-200 { animation-delay: 0.2s; }
+    .delay-300 { animation-delay: 0.3s; }
+  </style>
+  <style>@view-transition { navigation: auto; }</style>
+  <script src="/_sdk/0179d719c431a79e.data_sdk.js" type="text/javascript" integrity="sha512-OsRvJkI5GkC3MJQcgotQYotpzrMSX415GiKKgvYdxQEEkzD/fdchShO2FMSy0PJr/tiINMXOk5Vl2zAgg6bUiA=="></script>
+  <script src="https://cdn.tailwindcss.com/3.4.17" type="text/javascript"></script>
+ </head>
+ <body class="h-full m-0 p-0 overflow-auto">
+  <div id="app-container" class="min-h-full w-full flex items-center justify-center p-6" style="background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);">
+   <div class="text-center max-w-xl mx-auto">
+    <!-- 아이콘 영역 -->
+    <div class="relative mb-8 animate-fade-in-up opacity-0" style="animation-delay: 0.1s;">
+     <div class="absolute inset-0 flex items-center justify-center">
+      <div class="w-32 h-32 rounded-full animate-pulse-ring" style="background: rgba(94, 129, 244, 0.2);"></div>
+     </div>
+     <div class="relative animate-float"><i data-lucide="send" style="width: 96px; height: 96px; color: #5865F2; margin: 0 auto;"></i>
+     </div>
+    </div><!-- 텍스트 영역 -->
+    <div class="space-y-6">
+     <h1 id="notice-title" class="text-3xl md:text-4xl font-bold animate-fade-in-up opacity-0" style="font-family: 'Noto Sans KR', sans-serif; color: #ffffff; animation-delay: 0.2s;">📢 안내</h1>
+     <p id="notice-message" class="text-lg md:text-xl leading-relaxed animate-fade-in-up opacity-0" style="font-family: 'Noto Sans KR', sans-serif; color: #e2e8f0; animation-delay: 0.3s;">이 사이트는 사용하지 않습니다.
+       디스코드 채널을 통해 주문제작을 문의해주세요.</p><!-- 데코레이션 라인 -->
+     <div class="flex items-center justify-center gap-2 pt-4 animate-fade-in-up opacity-0" style="animation-delay: 0.4s;">
+      <div class="w-12 h-0.5 rounded-full" style="background: linear-gradient(90deg, transparent, #5865F2);"></div>
+      <div class="w-2 h-2 rounded-full" style="background: #5865F2;"></div>
+      <div class="w-12 h-0.5 rounded-full" style="background: linear-gradient(90deg, #5865F2, transparent);"></div>
+     </div><!-- 디스코드 이동 버튼 --> <a href="https://discord.gg/65yuaRunEX" target="_blank" rel="noopener noreferrer" class="inline-block mt-8 animate-fade-in-up opacity-0 transition-all duration-300 px-8 py-3 rounded-lg font-semibold" style="background: #5865F2; color: #ffffff; animation-delay: 0.5s;">디스코드로 이동</a>
+    </div>
+   </div>
+  </div>
+  <script>
+    const defaultConfig = {
+      notice_title: '📢 안내',
+      notice_message: '이 사이트는 사용하지 않습니다.\n디스코드 채널을 통해 주문제작을 문의해주세요.',
+      background_color: '#1a1a2e',
+      text_color: '#ffffff',
+      secondary_text_color: '#e2e8f0',
+      accent_color: '#5865F2',
+      font_family: 'Noto Sans KR',
+      font_size: 18
+    };
+    
+    let config = { ...defaultConfig };
+    
+    async function onConfigChange(cfg) {
+      config = { ...defaultConfig, ...cfg };
+      
+      const titleEl = document.getElementById('notice-title');
+      const messageEl = document.getElementById('notice-message');
+      const container = document.getElementById('app-container');
+      
+      // 텍스트 업데이트
+      titleEl.textContent = config.notice_title || defaultConfig.notice_title;
+      
+      const message = config.notice_message || defaultConfig.notice_message;
+      messageEl.innerHTML = message.replace(/\n/g, '<br>');
+      
+      // 색상 업데이트
+      const bgColor = config.background_color || defaultConfig.background_color;
+      container.style.background = `linear-gradient(135deg, ${bgColor} 0%, #16213e 50%, #0f3460 100%)`;
+      
+      titleEl.style.color = config.text_color || defaultConfig.text_color;
+      messageEl.style.color = config.secondary_text_color || defaultConfig.secondary_text_color;
+      
+      // 폰트 업데이트
+      const fontFamily = config.font_family || defaultConfig.font_family;
+      const baseFontStack = 'sans-serif';
+      titleEl.style.fontFamily = `${fontFamily}, ${baseFontStack}`;
+      messageEl.style.fontFamily = `${fontFamily}, ${baseFontStack}`;
+      
+      // 폰트 사이즈 업데이트
+      const baseSize = config.font_size || defaultConfig.font_size;
+      titleEl.style.fontSize = `${baseSize * 2}px`;
+      messageEl.style.fontSize = `${baseSize}px`;
+    }
+    
+    function mapToCapabilities(cfg) {
+      return {
+        recolorables: [
+          {
+            get: () => cfg.background_color || defaultConfig.background_color,
+            set: (value) => {
+              cfg.background_color = value;
+              window.elementSdk.setConfig({ background_color: value });
+            }
+          },
+          {
+            get: () => cfg.text_color || defaultConfig.text_color,
+            set: (value) => {
+              cfg.text_color = value;
+              window.elementSdk.setConfig({ text_color: value });
+            }
+          },
+          {
+            get: () => cfg.secondary_text_color || defaultConfig.secondary_text_color,
+            set: (value) => {
+              cfg.secondary_text_color = value;
+              window.elementSdk.setConfig({ secondary_text_color: value });
+            }
+          },
+          {
+            get: () => cfg.accent_color || defaultConfig.accent_color,
+            set: (value) => {
+              cfg.accent_color = value;
+              window.elementSdk.setConfig({ accent_color: value });
+            }
+          }
+        ],
+        borderables: [],
+        fontEditable: {
+          get: () => cfg.font_family || defaultConfig.font_family,
+          set: (value) => {
+            cfg.font_family = value;
+            window.elementSdk.setConfig({ font_family: value });
+          }
+        },
+        fontSizeable: {
+          get: () => cfg.font_size || defaultConfig.font_size,
+          set: (value) => {
+            cfg.font_size = value;
+            window.elementSdk.setConfig({ font_size: value });
+          }
+        }
+      };
+    }
+    
+    function mapToEditPanelValues(cfg) {
+      return new Map([
+        ['notice_title', cfg.notice_title || defaultConfig.notice_title],
+        ['notice_message', cfg.notice_message || defaultConfig.notice_message]
+      ]);
+    }
+    
+    // SDK 초기화
+    if (window.elementSdk) {
+      window.elementSdk.init({
+        defaultConfig,
+        onConfigChange,
+        mapToCapabilities,
+        mapToEditPanelValues
+      });
+    }
+    
+    // Lucide 아이콘 초기화
+    lucide.createIcons();
+  </script>
+</html>
